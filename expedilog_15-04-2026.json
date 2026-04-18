@@ -1,0 +1,293 @@
+{
+  "ocs": {
+    "118760": {
+      "placa": "TTB6J25",
+      "doca": "18",
+      "rota": "Araruama/Saquarema",
+      "transp": "KING",
+      "pedidos": "18",
+      "conf": "Caio",
+      "aux": "Felipe e Cristiano"
+    },
+    "118762": {
+      "placa": "TUE3F22",
+      "doca": "20",
+      "rota": "Arraial / CABO FRIO",
+      "transp": "KING",
+      "pedidos": "16",
+      "conf": "Jonathan",
+      "aux": "João e Carlos"
+    },
+    "118763": {
+      "placa": "TTG2B18",
+      "doca": "22",
+      "rota": "São Pedro da Aldeia",
+      "transp": "KING",
+      "pedidos": "14",
+      "conf": "Gabriel",
+      "aux": "Fladimir e Bruno"
+    },
+    "118764": {
+      "placa": "SRQ6H51",
+      "doca": "24",
+      "rota": "Rio das Ostras / Casimiro",
+      "transp": "MP",
+      "pedidos": "23",
+      "conf": "Rafael",
+      "aux": "André e Maurício"
+    },
+    "118773": {
+      "placa": "LTL4H19",
+      "doca": "19",
+      "rota": "SUL FLUMINENSE 1 + PISA",
+      "transp": "PM&F",
+      "pedidos": "28",
+      "conf": "Caio",
+      "aux": "Felipe e Cristiano"
+    },
+    "118774": {
+      "placa": "TTJ4D66",
+      "doca": "21",
+      "rota": "TERESOPOLIS 1 E 2",
+      "transp": "MP",
+      "pedidos": "18",
+      "conf": "Jonathan",
+      "aux": "João e Carlos"
+    },
+    "118776": {
+      "placa": "TTF1D23",
+      "doca": "23",
+      "rota": "COSTA VERDE 1 E 2",
+      "transp": "MP",
+      "pedidos": "21",
+      "conf": "Gabriel",
+      "aux": "Fladimir e Bruno"
+    },
+    "118777": {
+      "placa": "LLO4D07",
+      "doca": "25",
+      "rota": "COSTA VERDE",
+      "transp": "MP",
+      "pedidos": "21",
+      "conf": "Rafael",
+      "aux": "André e Maurício"
+    },
+    "118783": {
+      "placa": "NTO9E48",
+      "doca": "18",
+      "rota": "NITEROI 1",
+      "transp": "MP 2",
+      "pedidos": "22",
+      "conf": "Caio",
+      "aux": "Felipe e Cristiano"
+    },
+    "118784": {
+      "placa": "TTF4A69",
+      "doca": "20",
+      "rota": "NITEROI 2",
+      "transp": "MP",
+      "pedidos": "27",
+      "conf": "Jonathan",
+      "aux": "João e Carlos"
+    },
+    "118785": {
+      "placa": "TTH4H56",
+      "doca": "22",
+      "rota": "NITEROI 3",
+      "transp": "MP",
+      "pedidos": "21",
+      "conf": "Gabriel",
+      "aux": "Fladimir e Bruno"
+    },
+    "118786": {
+      "placa": "TTO0I44",
+      "doca": "17",
+      "rota": "ROCINHA",
+      "transp": "MP",
+      "pedidos": "17",
+      "conf": "",
+      "aux": ""
+    },
+    "118787": {
+      "placa": "KVM2B95",
+      "doca": "24",
+      "rota": "CENTRO Z/SUL",
+      "transp": "JSR",
+      "pedidos": "19",
+      "conf": "Rafael",
+      "aux": "André e Maurício"
+    },
+    "118793": {
+      "placa": "ANW8E45",
+      "doca": "19",
+      "rota": "JACAREPAGUA",
+      "transp": "JSR",
+      "pedidos": "28",
+      "conf": "Caio",
+      "aux": "Felipe e Cristiano"
+    },
+    "118795": {
+      "placa": "LKK2D13",
+      "doca": "21",
+      "rota": "ZONA OESTE 3",
+      "transp": "CARGO",
+      "pedidos": "28",
+      "conf": "Jonathan",
+      "aux": "João e Carlos"
+    },
+    "118796": {
+      "placa": "LBZ6E56",
+      "doca": "23",
+      "rota": "ZONA OESTE 6",
+      "transp": "CARGO",
+      "pedidos": "15",
+      "conf": "Gabriel",
+      "aux": "Fladimir e Bruno"
+    },
+    "118797": {
+      "placa": "TUX3F23",
+      "doca": "25",
+      "rota": "NOVA IGUAÇU 2",
+      "transp": "KING",
+      "pedidos": "20",
+      "conf": "Rafael",
+      "aux": "André e Maurício"
+    },
+    "118803": {
+      "placa": "NTL4D68",
+      "doca": "18",
+      "rota": "CAXIAS 3",
+      "transp": "MP 2",
+      "pedidos": "23",
+      "conf": "Caio",
+      "aux": "Felipe e Cristiano"
+    },
+    "118804": {
+      "placa": "DPC8B91",
+      "doca": "20",
+      "rota": "NOVA IGUAÇU 4",
+      "transp": "JSR",
+      "pedidos": "18",
+      "conf": "Jonathan",
+      "aux": "João e Carlos"
+    },
+    "118806": {
+      "placa": "LUD8B91",
+      "doca": "22",
+      "rota": "ZONA NORTE 2",
+      "transp": "JSR",
+      "pedidos": "16",
+      "conf": "Gabriel",
+      "aux": "Fladimir e Bruno"
+    },
+    "118807": {
+      "placa": "AUH8498",
+      "doca": "24",
+      "rota": "ZONA NORTE 3",
+      "transp": "JSR",
+      "pedidos": "16",
+      "conf": "Rafael",
+      "aux": "André e Maurício"
+    }
+  },
+  "done": [
+    "118760",
+    "118762",
+    "118763",
+    "118764",
+    "118773",
+    "118774",
+    "118776",
+    "118777",
+    "118783",
+    "118796",
+    "118785",
+    "118784",
+    "118787",
+    "118786",
+    "118795",
+    "118797",
+    "118793",
+    "118804",
+    "118806",
+    "118803",
+    "118807"
+  ],
+  "date": "15/04/2026",
+  "times": {
+    "118793": 1776324617707,
+    "118795": 1776323197068,
+    "118796": 1776322240757,
+    "118797": 1776324397772,
+    "118803": 1776326094037,
+    "118804": 1776325620935,
+    "118806": 1776325712381,
+    "118807": 1776326390181
+  },
+  "prod_log": [
+    {
+      "oc": "118796",
+      "conf": "Gabriel",
+      "doca": "23",
+      "date": "16/04/2026",
+      "ts": 1776322240758,
+      "duration": null
+    },
+    {
+      "oc": "118795",
+      "conf": "Jonathan",
+      "doca": "21",
+      "date": "16/04/2026",
+      "ts": 1776323197069,
+      "duration": null
+    },
+    {
+      "oc": "118797",
+      "conf": "Rafael",
+      "doca": "25",
+      "date": "16/04/2026",
+      "ts": 1776324397772,
+      "duration": null
+    },
+    {
+      "oc": "118793",
+      "conf": "Caio",
+      "doca": "19",
+      "date": "16/04/2026",
+      "ts": 1776324617707,
+      "duration": null
+    },
+    {
+      "oc": "118804",
+      "conf": "Jonathan",
+      "doca": "20",
+      "date": "16/04/2026",
+      "ts": 1776325620936,
+      "duration": null
+    },
+    {
+      "oc": "118806",
+      "conf": "Gabriel",
+      "doca": "22",
+      "date": "16/04/2026",
+      "ts": 1776325712382,
+      "duration": null
+    },
+    {
+      "oc": "118803",
+      "conf": "Caio",
+      "doca": "18",
+      "date": "16/04/2026",
+      "ts": 1776326094038,
+      "duration": null
+    },
+    {
+      "oc": "118807",
+      "conf": "Rafael",
+      "doca": "24",
+      "date": "16/04/2026",
+      "ts": 1776326390182,
+      "duration": null
+    }
+  ]
+}
