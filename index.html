@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DockCheck</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+:root{--bg:#111318;--surf:#181c24;--surf2:#1f2433;--bord:#2a3045;--acc:#f59e0b;--grn:#10b981;--red:#ef4444;--txt:#e2e8f0;--mut:#64748b;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden}
+.topbar{background:var(--surf);border-bottom:1px solid var(--bord);display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:sticky;top:0;z-index:100}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:1px}
+.logo em{color:var(--acc);font-style:normal}
+.clock{font-size:13px;color:var(--mut)}
+.nav{display:flex;background:var(--surf);border-bottom:2px solid var(--bord);overflow-x:auto;scrollbar-width:none;padding:0 8px}
+.nav::-webkit-scrollbar{display:none}
+.ntab{flex-shrink:0;background:none;border:none;border-bottom:3px solid transparent;color:var(--mut);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;padding:12px 16px 9px;text-transform:uppercase;transition:all .2s;white-space:nowrap}
+.ntab:hover{color:var(--txt)}
+.ntab.on{border-bottom-color:var(--acc);color:var(--acc)}
+.tab{display:none;padding:14px;max-width:860px;margin:0 auto;padding-bottom:40px}
+.tab.on{display:block}
+.card{background:var(--surf);border:1px solid var(--bord);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.ctitle{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.fg{flex:1;min-width:120px}
+.fg label{display:block;font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.5px;margin-bottom:5px;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--surf2);border:1.5px solid var(--bord);border-radius:8px;color:var(--txt);font-family:'Barlow',sans-serif;font-size:14px;padding:10px 12px;transition:border-color .15s;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--acc)}
+.fg input[readonly]{color:var(--grn);background:rgba(16,185,129,.07)}
+.fg select option{background:var(--surf2)}
+.fg textarea{resize:vertical;min-height:60px}
+.doca-big{font-family:'Barlow Condensed',sans-serif;font-size:32px!important;font-weight:800!important;text-align:center;letter-spacing:3px;text-transform:uppercase;padding:14px!important;border-width:2px!important}
+.doca-big:focus{border-color:var(--acc)!important}
+.btn{border:none;border-radius:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;padding:12px 20px;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.btn:active{transform:scale(.96)}
+.btn-acc{background:var(--acc);color:#111}
+.btn-acc:hover{background:#fbbf24}
+.btn-grn{background:var(--grn);color:#fff}
+.btn-grn:hover{filter:brightness(1.1)}
+.btn-ghost{background:var(--surf2);border:1.5px solid var(--bord);color:var(--txt)}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+.btn-sm{font-size:13px;padding:8px 14px}
+.btn-full{width:100%}
+.brow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.farea{background:var(--surf2);border:2px dashed var(--bord);border-radius:var(--r);min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.farea:hover{border-color:var(--acc)}
+.farea img{width:100%;max-height:280px;object-fit:contain}
+.ficon{font-size:36px}
+.fhint{color:var(--mut);font-size:13px;text-align:center;padding:0 16px}
+.fbadge{position:absolute;top:8px;right:8px;background:var(--grn);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
+.msgbox{background:var(--bg);border:1.5px solid var(--bord);border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:14px;line-height:1.9;padding:16px;white-space:pre-wrap;word-break:break-word;min-height:100px}
+.msgbox[contenteditable=true]{border-color:var(--acc);outline:none}
+.strow{display:flex;gap:8px;flex-wrap:wrap}
+.stbtn{border:1.5px solid var(--bord);border-radius:6px;background:var(--surf2);color:var(--mut);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;padding:8px 14px;transition:all .15s}
+.stbtn.on{border-color:var(--grn);background:rgba(16,185,129,.15);color:var(--grn)}
+.tscroll{overflow-x:auto;border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:560px}
+th{background:var(--surf2);border:1px solid var(--bord);color:var(--mut);font-size:10px;font-weight:700;letter-spacing:1.2px;padding:9px 10px;text-align:left;text-transform:uppercase;white-space:nowrap}
+td{border:1px solid var(--bord);padding:9px 10px;vertical-align:middle}
+tr:hover td{background:var(--surf2)}
+.badge{border-radius:4px;font-size:10px;font-weight:700;padding:2px 7px;text-transform:uppercase}
+.b-pend{background:rgba(245,158,11,.15);color:var(--acc)}
+.b-ok{background:rgba(16,185,129,.15);color:var(--grn)}
+.b-err{background:rgba(239,68,68,.15);color:var(--red)}
+.obar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;font-size:14px;font-weight:600;margin-bottom:12px}
+.obar.run{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--acc)}
+.obar.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--grn)}
+.obar.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(245,158,11,.3);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay{background:rgba(0,0,0,.8);backdrop-filter:blur(6px);display:none;inset:0;position:fixed;z-index:300;align-items:center;justify-content:center;padding:16px}
+.overlay.on{display:flex}
+.modal{background:var(--surf);border:1px solid var(--bord);border-radius:14px;width:100%;max-width:480px;padding:22px;max-height:92vh;overflow-y:auto}
+.modal h3{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;margin-bottom:14px}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.wabubble{background:#DCF8C6;color:#111;border-radius:12px 12px 0 12px;padding:14px 16px;font-size:13px;line-height:1.85;white-space:pre-wrap;word-break:break-word;margin-bottom:8px;max-height:240px;overflow-y:auto}
+.wabubble[contenteditable=true]{outline:2px solid var(--acc)}
+.eqcard{background:var(--surf2);border:1px solid var(--bord);border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.eqcard h4{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:3px}
+.eqcard p{font-size:12px;color:var(--mut)}
+.dtags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.dtag{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:5px;color:var(--acc);font-size:11px;font-weight:700;padding:2px 8px}
+.hitem{background:var(--surf);border:1px solid var(--bord);border-radius:var(--r);display:flex;gap:0;margin-bottom:10px;overflow:hidden}
+.hthumb{background:var(--surf2);flex-shrink:0;width:72px;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--mut)}
+.hthumb img{width:72px;height:72px;object-fit:cover}
+.hbody{flex:1;padding:12px}
+.hmeta{font-size:11px;color:var(--mut)}
+.htitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;margin:3px 0 6px}
+.sep{height:1px;background:var(--bord);margin:14px 0}
+.hint{font-size:12px;color:var(--mut);line-height:1.5}
+.empty{text-align:center;padding:44px 20px;color:var(--mut)}
+.empty-icon{font-size:44px;margin-bottom:10px}
+#toast{background:var(--surf2);border:1px solid var(--acc);border-radius:8px;bottom:28px;color:var(--acc);display:none;font-size:13px;font-weight:700;left:50%;padding:10px 22px;position:fixed;transform:translateX(-50%);z-index:999;box-shadow:0 4px 24px rgba(245,158,11,.25);white-space:nowrap;text-align:center;max-width:90vw}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">DOCK<em>CHECK</em></div>
+  <div class="clock" id="clock"></div>
+</header>
+
+<nav class="nav">
+  <button class="ntab on" onclick="goTab('conferencia',this)">📦 Conferência</button>
+  <button class="ntab"    onclick="goTab('cloud',this)">📷 Ler Tabela</button>
+  <button class="ntab"    onclick="goTab('equipes',this)">👥 Equipes</button>
+  <button class="ntab"    onclick="goTab('historico',this)">🕐 Histórico</button>
+  <button class="ntab"    onclick="goTab('config',this)">⚙️ Config</button>
+  <button class="ntab"    onclick="goTab('relatorio',this)">📊 Relatório</button>
+</nav>
+
+<!-- CONFERÊNCIA -->
+<section class="tab on" id="tab-conferencia">
+
+  <div class="card">
+    <div class="ctitle">🏭 Doca</div>
+    <div class="row">
+      <div class="fg" style="flex:0 0 130px">
+        <label>Número da Doca</label>
+        <input id="f-doca" class="doca-big" type="text" placeholder="20" maxlength="6" oninput="buscarEquipe(this.value)">
+      </div>
+      <div class="fg">
+        <label>OC</label>
+        <input id="f-oc" type="text" placeholder="Preenchida automaticamente">
+      </div>
+    </div>
+    <div id="multi-sel" style="display:none;margin-top:6px">
+      <label style="font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Mais de uma equipe — selecione:</label>
+      <select id="sel-eq" onchange="escolherEquipe()" style="margin-top:6px;width:100%;background:var(--surf2);border:1.5px solid var(--bord);border-radius:8px;color:var(--txt);font-size:14px;padding:10px 12px;outline:none"></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">👷 Equipe</div>
+    <div class="row">
+      <div class="fg"><label>Conferente</label><input id="f-conf" type="text" placeholder="Preenchido automaticamente" readonly></div>
+      <div class="fg"><label>Auxiliar 1</label><input id="f-aux1" type="text" placeholder="—" readonly></div>
+      <div class="fg"><label>Auxiliar 2</label><input id="f-aux2" type="text" placeholder="—" readonly></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">🚛 Dados da Carga</div>
+    <div class="row">
+      <div class="fg"><label>Placa</label><input id="f-placa" type="text" placeholder="Preenchida automaticamente" style="text-transform:uppercase"></div>
+      <div class="fg"><label>Rota</label><input id="f-rota" type="text" placeholder="Preenchida automaticamente"></div>
+    </div>
+    <div class="row">
+      <div class="fg"><label>Transportadora</label><input id="f-transp" type="text" placeholder="MP, KING, JSR..."></div>
+      <div class="fg"><label>Pedidos</label><input id="f-pedidos" type="number" placeholder="23"></div>
+      <div class="fg"><label>Clientes</label><input id="f-clientes" type="number" placeholder="17"></div>
+    </div>
+
+    <div class="sep"></div>
+
+    <label style="font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Tubos</label>
+    <div class="strow" style="margin-bottom:14px">
+      <button class="stbtn on" id="tb-conf" onclick="setSt('tubos','Conferidos')">✅ Conferidos</button>
+      <button class="stbtn"    id="tb-aus"  onclick="setSt('tubos','Ausentes')">❌ Ausentes</button>
+      <button class="stbtn"    id="tb-par"  onclick="setSt('tubos','Parcial')">⚠️ Parcial</button>
+      <button class="stbtn"    id="tb-nt"   onclick="setSt('tubos','Não tem')">— Não tem</button>
+    </div>
+    <input type="hidden" id="f-tubos" value="Conferidos">
+
+    <label style="font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Caixa d'água</label>
+    <div class="strow" style="margin-bottom:14px">
+      <button class="stbtn on" id="cb-conf" onclick="setSt('caixa','Conferida')">✅ Conferida</button>
+      <button class="stbtn"    id="cb-aus"  onclick="setSt('caixa','Ausente')">❌ Ausente</button>
+      <button class="stbtn"    id="cb-par"  onclick="setSt('caixa','Parcial')">⚠️ Parcial</button>
+      <button class="stbtn"    id="cb-nt"   onclick="setSt('caixa','Não tem')">— Não tem</button>
+    </div>
+    <input type="hidden" id="f-caixa" value="Conferida">
+
+    <div class="sep"></div>
+
+    <div class="fg" style="margin-bottom:10px">
+      <label>OBS</label>
+      <textarea id="f-obs" placeholder="Ex: Varejo entrou por último"></textarea>
+    </div>
+    <div class="fg">
+      <label>Horário</label>
+      <input id="f-hora" type="time">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">📷 Fotos do Caminhão</div>
+
+    <!-- grade de fotos -->
+    <div id="fotos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:10px"></div>
+
+    <!-- botão adicionar -->
+    <div class="farea" id="farea-add" onclick="document.getElementById('inp-cam').click()" style="min-height:90px">
+      <div class="ficon" style="font-size:28px">📷</div>
+      <div class="fhint" style="font-size:12px">Toque para adicionar foto</div>
+    </div>
+
+    <input type="file" id="inp-cam" accept="image/*" capture="environment" style="display:none" onchange="addFoto(event)">
+    <input type="file" id="inp-gal" accept="image/*" multiple style="display:none" onchange="addFoto(event)">
+
+    <div class="brow">
+      <button class="btn btn-acc btn-sm" onclick="document.getElementById('inp-cam').click()">📷 Câmera</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inp-gal').click()">🖼 Galeria</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearFotos()">✕ Limpar todas</button>
+    </div>
+    <p class="hint" style="margin-top:8px" id="fotos-count">Nenhuma foto adicionada</p>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">💬 Mensagem</div>
+    <div id="msgbox" class="msgbox">Preencha os dados acima para gerar a mensagem...</div>
+    <div class="brow">
+      <button class="btn btn-ghost btn-sm" onclick="gerarMsg()">🔄 Gerar</button>
+      <button class="btn btn-ghost btn-sm" onclick="editarMsg()">✏️ Editar</button>
+      <button class="btn btn-ghost btn-sm" onclick="copiarMsg()">📋 Copiar</button>
+    </div>
+  </div>
+
+  <div class="brow" style="margin-bottom:30px">
+    <button class="btn btn-acc btn-full" onclick="gerarMsg()">🔄 Gerar Mensagem</button>
+    <button class="btn btn-grn btn-full" style="font-size:18px;padding:14px" onclick="abrirEnvio()">📤 Enviar para WhatsApp</button>
+  </div>
+
+</section>
+
+<!-- LER TABELA -->
+<section class="tab" id="tab-cloud">
+  <div class="card">
+    <div class="ctitle">📄 Foto da Tabela Diária</div>
+    <div class="farea" id="farea-tab" onclick="document.getElementById('inp-tab').click()">
+      <div class="ficon">📄</div>
+      <div class="fhint">Tire foto ou selecione a tabela impressa</div>
+    </div>
+    <input type="file" id="inp-tab" accept="image/*" style="display:none" onchange="loadTab(event)">
+    <div class="brow">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inp-tab').setAttribute('capture','environment');document.getElementById('inp-tab').click()">📷 Câmera</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inp-tab').removeAttribute('capture');document.getElementById('inp-tab').click()">📁 Galeria</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearTab()">✕ Limpar</button>
+    </div>
+  </div>
+  <button class="btn btn-acc btn-full" id="btn-ocr" disabled onclick="rodarOCR()" style="margin-bottom:14px">🤖 Extrair dados com IA</button>
+  <div id="ocr-status" style="display:none"></div>
+  <div id="ocr-res" style="display:none">
+    <div class="card">
+      <div class="ctitle">📊 Dados — toque em ↗ Usar para preencher a conferência</div>
+      <div class="tscroll">
+        <table>
+          <thead><tr><th>Placa</th><th>OC</th><th>Doca</th><th>Rota</th><th>Ped.</th><th>Cli.</th><th>Transp.</th><th>Ação</th></tr></thead>
+          <tbody id="tbody-res"></tbody>
+        </table>
+      </div>
+      <div class="brow">
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 CSV</button>
+        <button class="btn btn-ghost btn-sm" onclick="salvarTabela()">💾 Histórico</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPES -->
+<section class="tab" id="tab-equipes">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800">Equipes</h2>
+    <button class="btn btn-acc btn-sm" onclick="abrirModalEq()">+ Nova Equipe</button>
+  </div>
+  <div id="lista-eq"><div class="empty"><div class="empty-icon">👥</div><p>Nenhuma equipe.</p></div></div>
+</section>
+
+<!-- HISTÓRICO -->
+<section class="tab" id="tab-historico">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800">Histórico</h2>
+    <button class="btn btn-ghost btn-sm" onclick="limparHist()">🗑 Limpar</button>
+  </div>
+  <div id="lista-hist"><div class="empty"><div class="empty-icon">📦</div><p>Nenhum registro.</p></div></div>
+</section>
+
+<!-- CONFIG -->
+<section class="tab" id="tab-config">
+  <div class="card">
+    <div class="ctitle">🔑 API Key Anthropic (OCR)</div>
+    <p class="hint" style="margin-bottom:10px">Necessária para extrair tabelas com IA. Salva só neste navegador.</p>
+    <div class="fg"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-ant-..."></div>
+    <div class="brow"><button class="btn btn-acc btn-sm" onclick="salvarKey()">💾 Salvar</button></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">✏️ Template da Mensagem</div>
+    <p class="hint" style="margin-bottom:10px">Placeholders: <code style="color:var(--grn)">[rota] [transp] [oc] [doca] [tubos] [caixa] [conf] [aux1] [aux2] [obs] [hora] [data]</code></p>
+    <textarea id="cfg-tmpl" rows="14" style="width:100%;background:var(--surf2);border:1.5px solid var(--bord);border-radius:8px;color:var(--txt);font-size:13px;padding:12px;resize:vertical;outline:none;font-family:'Barlow',sans-serif"></textarea>
+    <div class="brow">
+      <button class="btn btn-acc btn-sm" onclick="salvarTmpl()">💾 Salvar</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetTmpl()">↩ Padrão</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">🧪 Dados de Teste</div>
+    <p class="hint" style="margin-bottom:10px">Tabela real com 20 linhas carregada em <b>Ler Tabela</b>. Equipes de teste em <b>Equipes</b>.</p>
+    <div class="brow">
+      <button class="btn btn-ghost btn-sm" onclick="resetEqTeste()">↩ Equipes de teste</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetTabTeste()">↩ Tabela de teste</button>
+    </div>
+  </div>
+</section>
+
+<!-- RELATÓRIO -->
+<section class="tab" id="tab-relatorio">
+
+  <!-- FILTRO -->
+  <div class="card">
+    <div class="ctitle">🔍 Filtros</div>
+    <div class="row">
+      <div class="fg">
+        <label>Data</label>
+        <input type="date" id="rel-data" oninput="renderRelatorio()">
+      </div>
+      <div class="fg">
+        <label>Turno</label>
+        <select id="rel-turno" onchange="renderRelatorio()">
+          <option value="">Todos os turnos</option>
+          <option value="manha">☀️ Manhã (06h–14h)</option>
+          <option value="tarde">🌤 Tarde (14h–22h)</option>
+          <option value="noite">🌙 Noite (22h–06h)</option>
+        </select>
+      </div>
+      <div class="fg" style="display:flex;align-items:flex-end">
+        <button class="btn btn-ghost btn-sm btn-full" onclick="document.getElementById('rel-data').value='';document.getElementById('rel-turno').value='';renderRelatorio()">✕ Limpar filtros</button>
+      </div>
+    </div>
+    <p class="hint" id="rel-summary" style="margin-top:4px"></p>
+  </div>
+
+  <!-- RESUMO GERAL -->
+  <div class="card">
+    <div class="ctitle">📊 Resumo geral</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+      <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--acc)" id="rel-stat-cargas">—</div>
+        <div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Cargas</div>
+      </div>
+      <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--acc)" id="rel-stat-docas">—</div>
+        <div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Docas ativas</div>
+      </div>
+      <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--grn)" id="rel-stat-tempo">—</div>
+        <div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Tempo médio</div>
+      </div>
+      <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--acc)" id="rel-stat-confs">—</div>
+        <div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Conferentes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKING VELOCIDADE - RÁPIDAS -->
+  <div class="card">
+    <div class="ctitle">⚡ Docas mais rápidas — Top 3</div>
+    <div id="rel-podio-rapidas" style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap"></div>
+    <p class="hint" style="margin-top:6px">⏱ Tempo entre o horário de início informado e o registro da conferência.</p>
+  </div>
+
+  <!-- RANKING VELOCIDADE - LENTAS -->
+  <div class="card">
+    <div class="ctitle">🐢 Docas mais lentas — Top 3</div>
+    <div id="rel-podio-lentas" style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap"></div>
+  </div>
+
+  <!-- TOP 3 TEMPO MÉDIO -->
+  <div class="card">
+    <div class="ctitle">🏅 Top 3 por tempo médio de carregamento</div>
+    <div id="rel-top3-tempo" style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap"></div>
+    <p class="hint" style="margin-top:6px">⏱ Ranking das docas com melhor tempo médio no período filtrado.</p>
+  </div>
+
+  <!-- TABELA COMPLETA DE DOCAS -->
+  <div class="card">
+    <div class="ctitle">🏭 Relatório completo por doca</div>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>#</th><th>Doca</th><th>Cargas</th><th>T. Total</th><th>T. Médio</th><th>Mais rápido</th><th>Mais lento</th><th>Conferentes</th></tr></thead>
+        <tbody id="rel-tbody-docas"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RANKING CONFERENTES -->
+  <div class="card">
+    <div class="ctitle">🏆 Quem mais conferiu</div>
+    <div id="rel-podio-conf" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>#</th><th>Conferente</th><th>Conferências</th></tr></thead>
+        <tbody id="rel-tbody-conf"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ATIVIDADE POR DIA -->
+  <div class="card">
+    <div class="ctitle">📆 Atividade por dia</div>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Data</th><th>Conferências</th><th>Conferentes</th><th>Docas</th></tr></thead>
+        <tbody id="rel-tbody-dias"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="brow" style="margin-bottom:30px">
+    <button class="btn btn-acc btn-full" onclick="exportRelatorio()">📥 Exportar Relatório CSV</button>
+  </div>
+
+</section>
+
+<!-- MODAL EQUIPE -->
+<div class="overlay" id="ov-eq">
+  <div class="modal">
+    <h3 id="eq-titulo">Nova Equipe</h3>
+    <input type="hidden" id="eq-id">
+    <div class="row"><div class="fg"><label>Conferente *</label><input id="eq-conf" type="text" placeholder="Rafael"></div></div>
+    <div class="row">
+      <div class="fg"><label>Auxiliar 1</label><input id="eq-aux1" type="text" placeholder="André"></div>
+      <div class="fg"><label>Auxiliar 2</label><input id="eq-aux2" type="text" placeholder="Maurício"></div>
+    </div>
+    <div class="row">
+      <div class="fg"><label>Docas (separadas por vírgula) *</label><input id="eq-docas" type="text" placeholder="17, 18, 20"></div>
+    </div>
+    <div class="row">
+      <div class="fg"><label>Status</label>
+        <select id="eq-status"><option value="ativa">Ativa</option><option value="inativa">Inativa</option></select>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-ghost" onclick="fecharModalEq()">Cancelar</button>
+      <button class="btn btn-acc" onclick="salvarEquipe()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ENVIO — 1 BOTÃO (Web Share API) -->
+<div class="overlay" id="ov-envio">
+  <div class="modal" style="max-width:500px">
+    <h3>📤 Enviar para WhatsApp</h3>
+
+    <div id="env-foto-ok" style="display:none;margin-bottom:12px">
+      <div id="env-fotos-preview" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px"></div>
+      <p class="hint" id="env-fotos-label" style="margin-top:6px"></p>
+    </div>
+    <div id="env-foto-vazia" style="background:var(--surf2);border:2px dashed var(--bord);border-radius:10px;padding:16px;text-align:center;margin-bottom:12px;display:none">
+      <div style="font-size:28px;margin-bottom:4px">📷</div>
+      <p style="color:var(--mut);font-size:12px">Sem foto — volte e tire a foto do caminhão</p>
+    </div>
+
+    <div class="wabubble" id="env-msg" contenteditable="true"></div>
+    <p class="hint" style="margin-bottom:14px">✏️ Edite a mensagem se necessário antes de enviar.</p>
+
+    <!-- BOTÃO ÚNICO -->
+    <button class="btn btn-grn btn-full" onclick="compartilharTudo()" style="font-size:19px;padding:16px;margin-bottom:10px;letter-spacing:0">
+      📤 Enviar foto + texto juntos
+    </button>
+
+    <div id="share-fallback" style="display:none;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:12px;font-size:13px;line-height:1.7;margin-bottom:10px">
+      <b style="color:var(--acc)">ℹ️ Compartilhamento direto não disponível neste navegador.</b><br>
+      Texto copiado! No WhatsApp: abra o grupo → 📎 → Galeria → selecione a foto → cole o texto na legenda → envie.
+    </div>
+
+    <div class="mfoot">
+      <button class="btn btn-ghost btn-sm" onclick="fecharEnvio()">Cancelar</button>
+      <button class="btn btn-ghost btn-sm" onclick="soCopiar()">📋 Só copiar texto</button>
+      <button class="btn btn-ghost btn-sm" onclick="registrarEnvio()">✅ Registrar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const K_EQ='cc3_equipes',K_HIST='cc3_hist',K_TMPL='cc3_tmpl',K_KEY='cc3_key';
+
+const TMPL_PAD=`Rota: [rota]
+Transportadora: [transp]
+OC: [oc]
+Doca: [doca]
+Tubos: [tubos]
+Caixa d'água: [caixa]
+Conferente: [conf]
+Auxiliares: [aux1] e [aux2]
+OBS: [obs]
+Horário: [hora]
+Data: [data]`;
+
+const TABELA_TESTE=[
+  {placa:'KUT3F21',             oc:'118629',doca:'17',rota:'NITEROI 1 E 2',          pedidos:'17',clientes:'16',transportadora:'MP'},
+  {placa:'TTF1D24',             oc:'118632',doca:'20',rota:'Arraial / CABO FRIO',     pedidos:'23',clientes:'13',transportadora:'MP'},
+  {placa:'TUE3F22/FABIO ANDRADE',oc:'118633',doca:'22',rota:'Arraial / CABO FRIO',   pedidos:'20',clientes:'13',transportadora:'KING'},
+  {placa:'TTG2B18/MADSON',      oc:'118634',doca:'24',rota:'São Pedro da Aldeia',     pedidos:'17',clientes:'12',transportadora:'KING'},
+  {placa:'LTL4H19',             oc:'118644',doca:'19',rota:'SUL FLUMINENSE 1',        pedidos:'23',clientes:'17',transportadora:'PM&F'},
+  {placa:'TTJ4D66',             oc:'118645',doca:'21',rota:'SUL FLUMINENSE 2',        pedidos:'21',clientes:'17',transportadora:'MP'},
+  {placa:'TTE4H91',             oc:'118647',doca:'23',rota:'TERESOPOLIS 1 E 2',       pedidos:'36',clientes:'21',transportadora:'MP'},
+  {placa:'TTF1D23',             oc:'118649',doca:'25',rota:'COSTA VERDE 1 E 2 + PISA',pedidos:'18',clientes:'15',transportadora:'MP'},
+  {placa:'NTO9E48',             oc:'118657',doca:'18',rota:'NITEROI 1',               pedidos:'22',clientes:'17',transportadora:'MP 2'},
+  {placa:'TTF4A69',             oc:'118658',doca:'20',rota:'NITEROI 2',               pedidos:'20',clientes:'15',transportadora:'MP'},
+  {placa:'TTH4H56',             oc:'118659',doca:'22',rota:'NITEROI 3',               pedidos:'23',clientes:'18',transportadora:'MP'},
+  {placa:'TTO0I44',             oc:'118660',doca:'24',rota:'ROCINHA',                 pedidos:'12',clientes:'11',transportadora:'MP'},
+  {placa:'TUD3G65/ANDERSON',    oc:'118666',doca:'19',rota:'NOVA IGUAÇU 1 E 2',      pedidos:'29',clientes:'20',transportadora:'KING'},
+  {placa:'ANW8E45',             oc:'118667',doca:'23',rota:'JACAREPAGUA 1 E 2',       pedidos:'27',clientes:'22',transportadora:'JSR'},
+  {placa:'LBU4E92',             oc:'118668',doca:'21',rota:'ZONA OESTE 1',            pedidos:'34',clientes:'24',transportadora:'CARGO'},
+  {placa:'LKK2D13',             oc:'118669',doca:'23',rota:'ZONA OESTE 3 E 6',        pedidos:'22',clientes:'17',transportadora:'CARGO'},
+  {placa:'LBZ6E56',             oc:'118670',doca:'25',rota:'ZONA OESTE 6',            pedidos:'23',clientes:'18',transportadora:'CARGO'},
+  {placa:'TUE3F28/ALEXANDRE',   oc:'118676',doca:'18',rota:'CAXIAS 2',                pedidos:'21',clientes:'19',transportadora:'KING'},
+  {placa:'DPC8B91',             oc:'118677',doca:'20',rota:'NOVA IGUAÇU 4',           pedidos:'28',clientes:'21',transportadora:'JSR'},
+  {placa:'LUD3B91',             oc:'118679',doca:'24',rota:'ZONA NORTE 2',            pedidos:'21',clientes:'18',transportadora:'JSR'},
+];
+
+const EQUIPES_TESTE=[
+  {id:'et1',conf:'Rafael',  aux1:'André',    aux2:'Maurício', docas:['20'],status:'ativa'},
+  {id:'et2',conf:'Carlos',  aux1:'João',     aux2:'Pedro',    docas:['17'],status:'ativa'},
+  {id:'et3',conf:'Marcos',  aux1:'Luis',     aux2:'Fábio',    docas:['22'],status:'ativa'},
+  {id:'et4',conf:'Eduardo', aux1:'Robson',   aux2:'',         docas:['24'],status:'ativa'},
+  {id:'et5',conf:'Diego',   aux1:'Alexandre',aux2:'Anderson', docas:['19'],status:'ativa'},
+  {id:'et6',conf:'Thiago',  aux1:'Ricardo',  aux2:'',         docas:['21'],status:'ativa'},
+  {id:'et7',conf:'Leandro', aux1:'Matheus',  aux2:'Igor',     docas:['23'],status:'ativa'},
+  {id:'et8',conf:'Fernando',aux1:'Bruno',    aux2:'',         docas:['25'],status:'ativa'},
+  {id:'et9',conf:'Sandro',  aux1:'Rogério',  aux2:'',         docas:['18'],status:'ativa'},
+];
+
+let equipes=[],historico=[],ocrRows=[],fotosCAM=[],fotoTAB=null;
+
+function init(){
+  equipes=JSON.parse(localStorage.getItem(K_EQ)||'null');
+  historico=JSON.parse(localStorage.getItem(K_HIST)||'[]');
+  if(!equipes||!equipes.length){equipes=EQUIPES_TESTE;localStorage.setItem(K_EQ,JSON.stringify(equipes));}
+  ocrRows=TABELA_TESTE;
+  const key=localStorage.getItem(K_KEY);
+  if(key) document.getElementById('cfg-key').value=key;
+  document.getElementById('cfg-tmpl').value=localStorage.getItem(K_TMPL)||TMPL_PAD;
+  const now=new Date();
+  document.getElementById('f-hora').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  renderEquipes();renderHist();renderOCR(ocrRows);
+  document.getElementById('ocr-res').style.display='block';
+  document.getElementById('ocr-status').style.display='block';
+  document.getElementById('ocr-status').innerHTML=`<div class="obar ok">✅ ${ocrRows.length} linhas da tabela carregadas para teste!</div>`;
+  tickClock();setInterval(tickClock,1000);
+}
+function tickClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('pt-BR');}
+
+function goTab(n,b){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(x=>x.classList.remove('on'));
+  document.getElementById('tab-'+n).classList.add('on');b.classList.add('on');
+  if(n==='historico') renderHist();
+  if(n==='equipes')   renderEquipes();
+  if(n==='relatorio') renderRelatorio();
+}
+
+function setSt(tipo,val){
+  if(tipo==='tubos'){
+    document.getElementById('f-tubos').value=val;
+    const m={Conferidos:'tb-conf',Ausentes:'tb-aus',Parcial:'tb-par','Não tem':'tb-nt'};
+    document.querySelectorAll('[id^="tb-"]').forEach(b=>b.classList.remove('on'));
+    document.getElementById(m[val])?.classList.add('on');
+  } else {
+    document.getElementById('f-caixa').value=val;
+    const m={Conferida:'cb-conf',Ausente:'cb-aus',Parcial:'cb-par','Não tem':'cb-nt'};
+    document.querySelectorAll('[id^="cb-"]').forEach(b=>b.classList.remove('on'));
+    document.getElementById(m[val])?.classList.add('on');
+  }
+}
+
+// ════════ FOTOS (múltiplas) ════════
+// fotos: usa fotosCAM declarado no estado global acima
+
+function addFoto(ev){
+  const files = Array.from(ev.target.files);
+  if(!files.length) return;
+  files.forEach(file=>{
+    const r = new FileReader();
+    r.onload = e => {
+      fotosCAM.push(e.target.result);
+      renderFotosGrid();
+    };
+    r.readAsDataURL(file);
+  });
+  ev.target.value = ''; // permite selecionar a mesma foto novamente
+}
+
+function renderFotosGrid(){
+  const grid = document.getElementById('fotos-grid');
+  const count = document.getElementById('fotos-count');
+  const addArea = document.getElementById('farea-add');
+
+  if(!fotosCAM.length){
+    grid.innerHTML = '';
+    count.textContent = 'Nenhuma foto adicionada';
+    addArea.style.minHeight = '90px';
+    return;
+  }
+
+  count.textContent = `${fotosCAM.length} foto${fotosCAM.length>1?'s':''} adicionada${fotosCAM.length>1?'s':''}`;
+  addArea.style.minHeight = '70px';
+
+  grid.innerHTML = fotosCAM.map((b64,i)=>`
+    <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--surf2)">
+      <img src="${b64}" style="width:100%;height:100%;object-fit:cover">
+      <button onclick="removerFoto(${i})"
+        style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.7);border:none;border-radius:50%;
+               color:#fff;cursor:pointer;font-size:14px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;line-height:1">
+        ✕
+      </button>
+      <div style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px">${i+1}</div>
+    </div>
+  `).join('');
+}
+
+function removerFoto(i){
+  fotosCAM.splice(i,1);
+  renderFotosGrid();
+}
+
+function clearFotos(){
+  fotosCAM = [];
+  renderFotosGrid();
+}
+
+function loadTab(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    fotoTAB=e.target.result;
+    document.getElementById('farea-tab').innerHTML=`<img src="${fotoTAB}"><div class="fbadge">✓ Carregada</div>`;
+    document.getElementById('btn-ocr').disabled=false;
+  };
+  r.readAsDataURL(file);
+}
+function clearTab(){
+  fotoTAB=null;
+  document.getElementById('farea-tab').innerHTML='<div class="ficon">📄</div><div class="fhint">Tire foto ou selecione a tabela impressa</div>';
+  document.getElementById('inp-tab').value='';
+  document.getElementById('btn-ocr').disabled=true;
+  document.getElementById('ocr-res').style.display='none';
+  document.getElementById('ocr-status').style.display='none';
+}
+
+async function rodarOCR(){
+  if(!fotoTAB){toast('Carregue a foto primeiro!');return;}
+  const apiKey=localStorage.getItem(K_KEY);
+  if(!apiKey){toast('Configure a API Key em ⚙️ Config!');return;}
+  setOcrSt('run','🤖 Lendo tabela com IA...');
+  const b64=fotoTAB.split(',')[1],mtype=fotoTAB.split(';')[0].split(':')[1];
+  const prompt=`Você é um sistema OCR especializado em tabelas de logística brasileiras.
+A imagem contém uma tabela com colunas: PLACAS, VEÍCULO, OC, DOCA, ROTAS, PEDIDOS, CLIENTES, STATUS, TRANSPORTADORA.
+Extraia TODAS as linhas. Retorne SOMENTE JSON válido sem markdown:
+{"linhas":[{"placa":"","oc":"","doca":"","rota":"","pedidos":"","clientes":"","transportadora":"","status":""}]}
+Use null se não conseguir ler. Não invente dados.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:mtype,data:b64}},
+        {type:'text',text:prompt}
+      ]}]})
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error.message);
+    const txt=data.content.find(b=>b.type==='text')?.text||'';
+    const parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    ocrRows=parsed.linhas||[];
+    renderOCR(ocrRows);
+    setOcrSt('ok',`✅ ${ocrRows.length} linhas extraídas!`);
+    document.getElementById('ocr-res').style.display='block';
+    toast('Extração concluída!');
+  }catch(e){
+    setOcrSt('err','❌ Erro: '+e.message);
+    toast('Erro na extração. Verifique a API Key.');
+  }
+}
+function setOcrSt(t,m){
+  const el=document.getElementById('ocr-status');
+  el.style.display='block';
+  el.innerHTML=`<div class="obar ${t}">${t==='run'?'<div class="spin"></div>':''}${m}</div>`;
+}
+function renderOCR(rows){
+  const tb=document.getElementById('tbody-res');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--mut);padding:20px">Nenhuma linha.</td></tr>';return;}
+  const p=v=>v?v:`<span class="badge b-pend">—</span>`;
+  tb.innerHTML=rows.map((r,i)=>`<tr>
+    <td style="font-size:11px">${p(r.placa)}</td>
+    <td><b>${p(r.oc)}</b></td>
+    <td><b style="color:var(--acc)">${p(r.doca)}</b></td>
+    <td style="font-size:11px">${p(r.rota)}</td>
+    <td>${p(r.pedidos)}</td><td>${p(r.clientes)}</td>
+    <td>${p(r.transportadora)}</td>
+    <td><button class="btn btn-acc btn-sm" onclick="usarLinha(${i})">↗ Usar</button></td>
+  </tr>`).join('');
+}
+function usarLinha(i){
+  const r=ocrRows[i];if(!r)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-conferencia').classList.add('on');
+  document.querySelector('.ntab').classList.add('on');
+  setTimeout(()=>{
+    if(r.doca){document.getElementById('f-doca').value=r.doca;buscarEquipe(r.doca);}
+    if(r.oc)             document.getElementById('f-oc').value=r.oc;
+    if(r.placa)          document.getElementById('f-placa').value=r.placa;
+    if(r.rota)           document.getElementById('f-rota').value=r.rota;
+    if(r.transportadora) document.getElementById('f-transp').value=r.transportadora;
+    if(r.pedidos)        document.getElementById('f-pedidos').value=r.pedidos;
+    if(r.clientes)       document.getElementById('f-clientes').value=r.clientes;
+    gerarMsg();
+    toast('✅ Dados importados! Tire a foto do caminhão.');
+  },100);
+}
+function exportCSV(){
+  if(!ocrRows.length){toast('Nada para exportar.');return;}
+  const cols=['placa','oc','doca','rota','pedidos','clientes','transportadora','status'];
+  const csv=[cols.join(';'),...ocrRows.map(r=>cols.map(c=>r[c]||'').join(';'))].join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download=`tabela_${new Date().toISOString().slice(0,10)}.csv`;a.click();toast('CSV exportado!');
+}
+function salvarTabela(){
+  historico.unshift({id:crypto.randomUUID(),tipo:'tabela',data:new Date().toISOString(),rows:ocrRows,foto:null,mensagem:null});
+  saveHist();toast('Salvo no histórico!');
+}
+
+function saveEq(){localStorage.setItem(K_EQ,JSON.stringify(equipes));}
+function abrirModalEq(id){
+  const eq=id?equipes.find(e=>e.id===id):{};
+  document.getElementById('eq-titulo').textContent=id?'Editar Equipe':'Nova Equipe';
+  document.getElementById('eq-id').value=id||'';
+  document.getElementById('eq-conf').value=eq?.conf||'';
+  document.getElementById('eq-aux1').value=eq?.aux1||'';
+  document.getElementById('eq-aux2').value=eq?.aux2||'';
+  document.getElementById('eq-docas').value=(eq?.docas||[]).join(', ');
+  document.getElementById('eq-status').value=eq?.status||'ativa';
+  document.getElementById('ov-eq').classList.add('on');
+}
+function fecharModalEq(){document.getElementById('ov-eq').classList.remove('on');}
+function salvarEquipe(){
+  const conf=document.getElementById('eq-conf').value.trim();
+  const ds=document.getElementById('eq-docas').value.trim();
+  if(!conf||!ds){toast('Preencha conferente e docas!');return;}
+  const id=document.getElementById('eq-id').value||crypto.randomUUID();
+  const eq={id,conf,aux1:document.getElementById('eq-aux1').value.trim(),aux2:document.getElementById('eq-aux2').value.trim(),
+    docas:ds.split(',').map(d=>d.trim()).filter(Boolean),status:document.getElementById('eq-status').value};
+  const idx=equipes.findIndex(e=>e.id===id);
+  if(idx>=0) equipes[idx]=eq; else equipes.push(eq);
+  saveEq();renderEquipes();fecharModalEq();toast('Equipe salva!');
+}
+function delEq(id){
+  if(!confirm('Remover esta equipe?'))return;
+  equipes=equipes.filter(e=>e.id!==id);saveEq();renderEquipes();toast('Removida.');
+}
+function renderEquipes(){
+  const el=document.getElementById('lista-eq');
+  if(!equipes.length){el.innerHTML='<div class="empty"><div class="empty-icon">👥</div><p>Nenhuma equipe.</p></div>';return;}
+  el.innerHTML=equipes.map(eq=>`
+    <div class="eqcard">
+      <div>
+        <h4>${eq.conf} <span class="badge ${eq.status==='ativa'?'b-ok':'b-err'}">${eq.status}</span></h4>
+        <p>${[eq.aux1,eq.aux2].filter(Boolean).join(' · ')||'Sem auxiliares'}</p>
+        <div class="dtags">${eq.docas.map(d=>`<span class="dtag">${d}</span>`).join('')}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="abrirModalEq('${eq.id}')">✏️</button>
+        <button class="btn btn-ghost btn-sm" onclick="delEq('${eq.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function buscarEquipe(doca){
+  const d=doca.trim();if(!d){limparTudo();return;}
+  const ativas=equipes.filter(e=>e.status==='ativa'&&e.docas.map(x=>x.trim()).includes(d));
+  const msel=document.getElementById('multi-sel');
+  if(!ativas.length){limparEquipe();msel.style.display='none';}
+  else if(ativas.length===1){preencherEquipe(ativas[0]);msel.style.display='none';}
+  else{
+    msel.style.display='block';
+    const sel=document.getElementById('sel-eq');
+    sel.innerHTML=ativas.map((e,i)=>`<option value="${i}">${e.conf} — ${e.rota||'sem rota'}</option>`).join('');
+    sel.dataset.eq=JSON.stringify(ativas);preencherEquipe(ativas[0]);
+  }
+  const linhas=ocrRows.filter(r=>r.doca&&r.doca.trim()===d);
+  if(linhas.length===1) preencherCarga(linhas[0]);
+  else if(linhas.length>1){preencherCarga(linhas[0]);toast(`⚠️ ${linhas.length} OCs na doca ${d} — veja em Ler Tabela`);}
+}
+function escolherEquipe(){
+  const sel=document.getElementById('sel-eq');
+  preencherEquipe(JSON.parse(sel.dataset.eq||'[]')[parseInt(sel.value)]);
+}
+function preencherEquipe(eq){
+  document.getElementById('f-conf').value=eq.conf||'';
+  document.getElementById('f-aux1').value=eq.aux1||'';
+  document.getElementById('f-aux2').value=eq.aux2||'';
+}
+function preencherCarga(r){
+  if(r.oc)             document.getElementById('f-oc').value=r.oc;
+  if(r.placa)          document.getElementById('f-placa').value=r.placa;
+  if(r.rota)           document.getElementById('f-rota').value=r.rota;
+  if(r.transportadora) document.getElementById('f-transp').value=r.transportadora;
+  if(r.pedidos)        document.getElementById('f-pedidos').value=r.pedidos;
+  if(r.clientes)       document.getElementById('f-clientes').value=r.clientes;
+}
+function limparEquipe(){['f-conf','f-aux1','f-aux2'].forEach(id=>document.getElementById(id).value='');}
+function limparTudo(){
+  limparEquipe();
+  ['f-oc','f-placa','f-rota','f-transp','f-pedidos','f-clientes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('multi-sel').style.display='none';
+}
+
+function gerarMsg(){
+  const tmpl=localStorage.getItem(K_TMPL)||TMPL_PAD;
+  const now=new Date();
+  const vals={
+    rota:  document.getElementById('f-rota').value||'—',
+    transp:document.getElementById('f-transp').value||'—',
+    oc:    document.getElementById('f-oc').value||'—',
+    doca:  document.getElementById('f-doca').value||'—',
+    tubos: document.getElementById('f-tubos').value||'Conferidos',
+    caixa: document.getElementById('f-caixa').value||'Conferida',
+    conf:  document.getElementById('f-conf').value||'—',
+    aux1:  document.getElementById('f-aux1').value||'—',
+    aux2:  document.getElementById('f-aux2').value||'—',
+    obs:   document.getElementById('f-obs').value||'Nenhuma',
+    hora:  document.getElementById('f-hora').value||now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    data:  now.toLocaleDateString('pt-BR'),
+  };
+  let msg=tmpl;
+  for(const[k,v] of Object.entries(vals)) msg=msg.replaceAll(`[${k}]`,v);
+  document.getElementById('msgbox').textContent=msg;
+  return msg;
+}
+function editarMsg(){
+  const el=document.getElementById('msgbox');
+  el.contentEditable=el.contentEditable==='true'?'false':'true';
+  if(el.contentEditable==='true') el.focus();
+}
+function copiarMsg(){navigator.clipboard.writeText(document.getElementById('msgbox').textContent).then(()=>toast('Mensagem copiada!'));}
+
+function abrirEnvio(){
+  const msg=gerarMsg();
+  document.getElementById('env-msg').textContent=msg;
+  const tem = fotosCAM.length > 0;
+  document.getElementById('env-foto-ok').style.display    = tem ? 'block' : 'none';
+  document.getElementById('env-foto-vazia').style.display = tem ? 'none'  : 'block';
+  if(tem){
+    document.getElementById('env-fotos-label').textContent = `${fotosCAM.length} foto${fotosCAM.length>1?'s':''} serão enviadas`;
+    document.getElementById('env-fotos-preview').innerHTML = fotosCAM.map(b64=>
+      `<img src="${b64}" style="height:80px;width:80px;object-fit:cover;border-radius:8px;flex-shrink:0">`
+    ).join('');
+  }
+  document.getElementById('share-fallback').style.display='none';
+  document.getElementById('ov-envio').classList.add('on');
+}
+function fecharEnvio(){document.getElementById('ov-envio').classList.remove('on');}
+
+async function compartilharTudo(){
+  const msg=document.getElementById('env-msg').textContent;
+
+  // tenta Web Share API com arquivos
+  if(fotosCAM.length > 0 && navigator.canShare){
+    try{
+      const files = await Promise.all(fotosCAM.map(async(b64,i)=>{
+        const res  = await fetch(b64);
+        const blob = await res.blob();
+        return new File([blob],`carga_doca${document.getElementById('f-doca').value}_${i+1}.jpg`,{type:blob.type});
+      }));
+      if(navigator.canShare({files, text:msg})){
+        await navigator.share({files, text:msg});
+        registrarEnvio(); return;
+      }
+    }catch(e){ if(e.name==='AbortError') return; }
+  }
+
+  // fallback share só texto
+  if(navigator.share){
+    try{ await navigator.share({text:msg}); registrarEnvio(); return; }
+    catch(e){ if(e.name==='AbortError') return; }
+  }
+
+  // último fallback
+  document.getElementById('share-fallback').style.display='block';
+  navigator.clipboard.writeText(msg).then(()=>{
+    toast('Texto copiado! Abrindo WhatsApp...');
+    setTimeout(()=>window.open('https://wa.me/','_blank'),700);
+  });
+}
+
+function soCopiar(){navigator.clipboard.writeText(document.getElementById('env-msg').textContent).then(()=>toast('Texto copiado!'));}
+
+function registrarEnvio(){
+  const msg=document.getElementById('env-msg').textContent;
+  historico.unshift({id:crypto.randomUUID(),tipo:'conferencia',data:new Date().toISOString(),
+    doca:document.getElementById('f-doca').value,rota:document.getElementById('f-rota').value,
+    conf:document.getElementById('f-conf').value,oc:document.getElementById('f-oc').value,
+    hora:document.getElementById('f-hora').value,
+    mensagem:msg, fotos:[...fotosCAM]});
+  saveHist();fecharEnvio();toast('✅ Conferência registrada!');
+}
+
+function saveHist(){localStorage.setItem(K_HIST,JSON.stringify(historico));}
+function limparHist(){if(!confirm('Limpar todo o histórico?'))return;historico=[];saveHist();renderHist();}
+function renderHist(){
+  const el=document.getElementById('lista-hist');
+  if(!historico.length){el.innerHTML='<div class="empty"><div class="empty-icon">📦</div><p>Nenhum registro.</p></div>';return;}
+  el.innerHTML=historico.map(h=>{
+    const d=new Date(h.data);
+    const ds=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const fotos = h.fotos || (h.foto ? [h.foto] : []); // compatibilidade com registros antigos
+    const thumb = fotos.length ? `<img src="${fotos[0]}">` : `<span>${h.tipo==='tabela'?'📄':'📦'}</span>`;
+    const qtdFotos = fotos.length > 1 ? `<span class="badge b-ok" style="margin-left:4px">+${fotos.length} fotos</span>` : '';
+    return `<div class="hitem">
+      <div class="hthumb">${thumb}</div>
+      <div class="hbody">
+        <div class="hmeta">${ds} · ${h.tipo==='tabela'?'Importação':'Conferência'}</div>
+        <div class="htitle">${h.tipo==='tabela'?`Tabela — ${h.rows?.length||0} linhas`:`Doca ${h.doca||'?'} · OC ${h.oc||'?'} · ${h.conf||'?'}`}${qtdFotos}</div>
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+          ${h.mensagem?`<button class="btn btn-ghost btn-sm" onclick="copiarHist('${h.id}')">📋 Copiar</button>`:''}
+          ${fotos.length?`<button class="btn btn-ghost btn-sm" onclick="verFotos('${h.id}')">📷 Ver fotos</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function copiarHist(id){const h=historico.find(x=>x.id===id);if(h?.mensagem) navigator.clipboard.writeText(h.mensagem).then(()=>toast('Copiado!'));}
+function verFotos(id){
+  const h=historico.find(x=>x.id===id);
+  const fotos = h?.fotos || (h?.foto ? [h.foto] : []);
+  if(!fotos.length) return;
+  const w=window.open('');
+  w.document.write(`<html><body style="background:#111;margin:0;padding:10px;display:flex;flex-direction:column;gap:10px">
+    ${fotos.map((f,i)=>`<div style="color:#fff;font-size:12px;margin-bottom:2px">Foto ${i+1}</div><img src="${f}" style="max-width:100%;border-radius:8px">`).join('')}
+  </body></html>`);
+}
+function salvarKey(){localStorage.setItem(K_KEY,document.getElementById('cfg-key').value.trim());toast('API Key salva!');}
+function salvarTmpl(){localStorage.setItem(K_TMPL,document.getElementById('cfg-tmpl').value);toast('Template salvo!');}
+function resetTmpl(){document.getElementById('cfg-tmpl').value=TMPL_PAD;localStorage.removeItem(K_TMPL);toast('Template restaurado.');}
+function resetEqTeste(){equipes=EQUIPES_TESTE;localStorage.setItem(K_EQ,JSON.stringify(equipes));renderEquipes();toast('Equipes restauradas!');}
+function resetTabTeste(){
+  ocrRows=TABELA_TESTE;renderOCR(ocrRows);
+  document.getElementById('ocr-res').style.display='block';
+  document.getElementById('ocr-status').style.display='block';
+  document.getElementById('ocr-status').innerHTML=`<div class="obar ok">✅ ${ocrRows.length} linhas carregadas!</div>`;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-cloud').classList.add('on');
+  document.querySelectorAll('.ntab')[1].classList.add('on');
+  toast('Tabela restaurada!');
+}
+
+let _tt;
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.style.display='block';clearTimeout(_tt);_tt=setTimeout(()=>el.style.display='none',3000);}
+
+// ════════ RELATÓRIO ════════
+
+function renderRelatorio(){
+  const filtroData  = document.getElementById('rel-data').value;
+  const filtroTurno = document.getElementById('rel-turno').value;
+  const base = historico.filter(h => h.tipo === 'conferencia');
+
+  let entries = base;
+  if(filtroData)  entries = entries.filter(h => h.data && h.data.slice(0,10) === filtroData);
+  if(filtroTurno) entries = entries.filter(h => _turnoDeHora(h.hora) === filtroTurno);
+
+  // Resumo geral
+  const docasSet = new Set(entries.map(h=>h.doca).filter(Boolean));
+  const confsSet = new Set(entries.map(h=>h.conf).filter(Boolean));
+  const duracoes = entries.map(h=>_duracaoMin(h)).filter(v=>v!==null);
+  const tempoMed = duracoes.length ? Math.round(duracoes.reduce((a,b)=>a+b,0)/duracoes.length) : null;
+
+  document.getElementById('rel-stat-cargas').textContent = entries.length;
+  document.getElementById('rel-stat-docas').textContent  = docasSet.size;
+  document.getElementById('rel-stat-confs').textContent  = confsSet.size;
+  document.getElementById('rel-stat-tempo').textContent  = _fmtMin(tempoMed);
+
+  const partes=[];
+  if(filtroData)  partes.push(new Date(filtroData+'T12:00:00').toLocaleDateString('pt-BR'));
+  if(filtroTurno) partes.push({manha:'Manhã (06h–14h)',tarde:'Tarde (14h–22h)',noite:'Noite (22h–06h)'}[filtroTurno]);
+  document.getElementById('rel-summary').textContent =
+    partes.length ? partes.join(' · ') + ` — ${entries.length} conferência(s)` : `Total: ${entries.length} conferência(s)`;
+
+  // Agrupamento por doca
+  const byDoca={};
+  entries.forEach(h=>{
+    const k=h.doca?.trim()||'?';
+    if(!byDoca[k]) byDoca[k]={cargas:0,duracoes:[],confs:new Set()};
+    byDoca[k].cargas++;
+    const dur=_duracaoMin(h); if(dur!==null) byDoca[k].duracoes.push(dur);
+    if(h.conf) byDoca[k].confs.add(h.conf.trim());
+  });
+
+  const docaList=Object.entries(byDoca).map(([doca,v])=>{
+    const d=v.duracoes;
+    const med=d.length?Math.round(d.reduce((a,b)=>a+b,0)/d.length):null;
+    return {doca, cargas:v.cargas, med, min:d.length?Math.min(...d):null, max:d.length?Math.max(...d):null, confs:[...v.confs], duracoes:d};
+  });
+
+  const porCargas  = [...docaList].sort((a,b)=>b.cargas-a.cargas);
+  const comTempo   = docaList.filter(d=>d.med!==null);
+  const maisRapidas= [...comTempo].sort((a,b)=>a.med-b.med).slice(0,3);
+  const maisLentas = [...comTempo].sort((a,b)=>b.med-a.med).slice(0,3);
+  const top3Tempo  = [...comTempo].sort((a,b)=>a.med-b.med).slice(0,3);
+
+  _relPodioDocas('rel-podio-rapidas', maisRapidas, true);
+  _relPodioDocas('rel-podio-lentas',  maisLentas,  false);
+  _relTop3Tempo('rel-top3-tempo', top3Tempo);
+  _relTabelaDocas('rel-tbody-docas', porCargas, comTempo);
+
+  // Agrupamento por conferente
+  const byConf={};
+  entries.forEach(h=>{const c=h.conf?.trim()||'(sem nome)';byConf[c]=(byConf[c]||0)+1;});
+  const confRank=Object.entries(byConf).sort((a,b)=>b[1]-a[1]);
+  _relPodio('rel-podio-conf', confRank, 'conferência');
+  _relTabela('rel-tbody-conf', confRank);
+
+  // Agrupamento por dia
+  const byDia={};
+  entries.forEach(h=>{
+    const dia=h.data?h.data.slice(0,10):'sem data';
+    if(!byDia[dia]) byDia[dia]={count:0,confs:new Set(),docas:new Set()};
+    byDia[dia].count++;
+    if(h.conf) byDia[dia].confs.add(h.conf.trim());
+    if(h.doca) byDia[dia].docas.add(h.doca.trim());
+  });
+  const diasRank=Object.entries(byDia).sort((a,b)=>b[0].localeCompare(a[0]));
+  _relDias('rel-tbody-dias', diasRank);
+}
+
+function _turnoDeHora(horaStr){
+  if(!horaStr) return null;
+  const h=parseInt(horaStr.split(':')[0],10);
+  if(isNaN(h)) return null;
+  if(h>=6&&h<14) return 'manha';
+  if(h>=14&&h<22) return 'tarde';
+  return 'noite';
+}
+
+function _duracaoMin(h){
+  // h.hora = horário de início (HH:MM) salvo no registro
+  // h.data = ISO timestamp do momento do registro (fim)
+  if(!h.hora||!h.data) return null;
+  const reg=new Date(h.data);
+  const pts=h.hora.split(':');
+  if(pts.length<2) return null;
+  const hh=parseInt(pts[0],10),mm=parseInt(pts[1],10);
+  if(isNaN(hh)||isNaN(mm)) return null;
+  const ini=new Date(reg); ini.setHours(hh,mm,0,0);
+  let diff=(reg-ini)/60000;
+  if(diff<0) diff+=1440;          // cruzou meia-noite
+  if(diff<1||diff>480) return null; // sanidade: <1min ou >8h = ignorar
+  return Math.round(diff);
+}
+
+function _fmtMin(min){
+  if(min===null||min===undefined) return '—';
+  if(min<60) return min+'min';
+  return Math.floor(min/60)+'h'+String(min%60).padStart(2,'0');
+}
+
+function _relPodioDocas(elId, list, rapida){
+  const el=document.getElementById(elId);
+  if(!list.length){el.innerHTML='<p class="hint">Sem dados de tempo suficientes neste período.</p>';return;}
+  const medals=['🥇','🥈','🥉'];
+  const bordas=rapida
+    ?['var(--grn)','rgba(16,185,129,.35)','rgba(16,185,129,.15)']
+    :['var(--red)','rgba(239,68,68,.35)','rgba(239,68,68,.15)'];
+  const cores=rapida
+    ?['var(--grn)','#6ee7b7','#a7f3d0']
+    :['var(--red)','#fca5a5','#fecaca'];
+  el.innerHTML=list.map((d,i)=>`
+    <div style="background:var(--surf2);border:1.5px solid ${bordas[i]||'var(--bord)'};border-radius:10px;
+                padding:14px 16px;flex:1;min-width:100px;text-align:center">
+      <div style="font-size:26px;margin-bottom:2px">${medals[i]||''}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:${cores[i]||'var(--txt)'}">
+        Doca ${d.doca}
+      </div>
+      <div style="font-size:22px;font-weight:800;color:${cores[i]||'var(--txt)'};margin:2px 0">
+        ${_fmtMin(d.med)}
+      </div>
+      <div style="font-size:11px;color:var(--mut)">${d.cargas} carga${d.cargas>1?'s':''}</div>
+    </div>`).join('');
+}
+
+function _relTabelaDocas(elId, list, comTempo){
+  const tb=document.getElementById(elId);
+  if(!list.length){
+    tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--mut);padding:18px">Sem dados.</td></tr>';
+    return;
+  }
+  // mapa de rank de velocidade (menor med = mais rápida = rank 1)
+  const rankVel={};
+  if(comTempo&&comTempo.length){
+    [...comTempo].sort((a,b)=>a.med-b.med).forEach((d,i)=>{rankVel[d.doca]=i+1;});
+  }
+  tb.innerHTML=list.map((d,i)=>{
+    const rv=rankVel[d.doca];
+    const rvBadge=rv?`<span style="background:rgba(16,185,129,.15);color:var(--grn);border-radius:4px;font-size:10px;font-weight:700;padding:1px 6px;margin-left:5px">#${rv}⚡</span>`:'';
+    const total=d.duracoes&&d.duracoes.length?d.duracoes.reduce((a,b)=>a+b,0):null;
+    return`<tr>
+      <td style="text-align:center;font-size:13px;font-weight:700;color:var(--mut)">${i+1}</td>
+      <td><b style="font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--acc)">Doca ${d.doca}</b>${rvBadge}</td>
+      <td><b style="color:var(--acc)">${d.cargas}</b></td>
+      <td style="font-size:12px;color:var(--mut)">${_fmtMin(total)}</td>
+      <td><b>${_fmtMin(d.med)}</b></td>
+      <td style="color:var(--grn);font-size:12px">${_fmtMin(d.min)}</td>
+      <td style="color:var(--red);font-size:12px">${_fmtMin(d.max)}</td>
+      <td style="font-size:11px;color:var(--mut)">${d.confs.join(', ')||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function _relTop3Tempo(elId, list){
+  const el=document.getElementById(elId);
+  if(!list.length){el.innerHTML='<p class="hint">Sem dados de tempo suficientes neste período.</p>';return;}
+  const medals=['🥇','🥈','🥉'];
+  const labels=['1º lugar','2º lugar','3º lugar'];
+  const bordas=['rgba(245,158,11,.7)','rgba(245,158,11,.35)','rgba(245,158,11,.15)'];
+  const cores=['var(--acc)','#fbbf24','#fde68a'];
+  el.innerHTML=list.map((d,i)=>`
+    <div style="background:var(--surf2);border:2px solid ${bordas[i]||'var(--bord)'};border-radius:10px;
+                padding:16px;flex:1;min-width:110px;text-align:center">
+      <div style="font-size:28px;margin-bottom:4px">${medals[i]||''}</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--mut);text-transform:uppercase;margin-bottom:4px">${labels[i]}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:${cores[i]||'var(--txt)'}">
+        Doca ${d.doca}
+      </div>
+      <div style="font-size:26px;font-weight:800;color:${cores[i]||'var(--txt)'};margin:4px 0">
+        ${_fmtMin(d.med)}
+      </div>
+      <div style="font-size:11px;color:var(--mut)">${d.cargas} carga${d.cargas>1?'s':''} · T.médio</div>
+    </div>`).join('');
+}
+
+function _relPodio(elId,rank,label){
+  const el=document.getElementById(elId);
+  if(!rank.length){el.innerHTML='<p class="hint">Sem dados para este período.</p>';return;}
+  const medals=['🥇','🥈','🥉'];
+  const bordas=['var(--acc)','rgba(148,163,184,.4)','rgba(205,127,50,.4)'];
+  const cores=['var(--acc)','#94a3b8','#cd7f32'];
+  el.innerHTML=rank.slice(0,3).map(([nome,cnt],i)=>`
+    <div style="background:var(--surf2);border:1.5px solid ${bordas[i]};border-radius:10px;
+                padding:14px 16px;flex:1;min-width:100px;text-align:center">
+      <div style="font-size:26px;margin-bottom:4px">${medals[i]}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;
+                  color:${cores[i]};word-break:break-word">${nome}</div>
+      <div style="font-size:12px;color:var(--mut);margin-top:3px">${cnt} ${label}${cnt>1?'s':''}</div>
+    </div>`).join('');
+}
+
+function _relTabela(elId,rank){
+  const tb=document.getElementById(elId);
+  if(!rank.length){
+    tb.innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--mut);padding:18px">Sem dados.</td></tr>';
+    return;
+  }
+  const medals=['🥇','🥈','🥉'];
+  tb.innerHTML=rank.map(([nome,cnt],i)=>`<tr>
+    <td style="text-align:center;font-size:${i<3?'16':'13'}px">${i<3?medals[i]:i+1}</td>
+    <td><b>${nome}</b></td>
+    <td><b style="color:var(--acc)">${cnt}</b></td>
+  </tr>`).join('');
+}
+
+function _relDias(elId,dias){
+  const tb=document.getElementById(elId);
+  if(!dias.length){
+    tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--mut);padding:18px">Sem dados.</td></tr>';
+    return;
+  }
+  tb.innerHTML=dias.map(([dia,v])=>{
+    const d=new Date(dia+'T12:00:00').toLocaleDateString('pt-BR');
+    return`<tr>
+      <td><b>${d}</b></td>
+      <td><b style="color:var(--acc)">${v.count}</b></td>
+      <td style="font-size:12px;color:var(--mut)">${[...v.confs].join(', ')}</td>
+      <td style="font-size:12px;color:var(--mut)">${[...v.docas].join(', ')}</td>
+    </tr>`;
+  }).join('');
+}
+
+function exportRelatorio(){
+  const filtroData  = document.getElementById('rel-data').value;
+  const filtroTurno = document.getElementById('rel-turno').value;
+  const base=historico.filter(h=>h.tipo==='conferencia');
+  let entries=base;
+  if(filtroData)  entries=entries.filter(h=>h.data&&h.data.slice(0,10)===filtroData);
+  if(filtroTurno) entries=entries.filter(h=>_turnoDeHora(h.hora)===filtroTurno);
+  if(!entries.length){toast('Sem dados para exportar.');return;}
+
+  const nomeTurno={manha:'Manhã',tarde:'Tarde',noite:'Noite'};
+  const linhas=['=== CONFERÊNCIAS ===','Data;Hora;Turno;Doca;OC;Rota;Conferente;Duração(min)'];
+  entries.forEach(h=>{
+    const d=new Date(h.data);
+    const dur=_duracaoMin(h);
+    linhas.push([
+      d.toLocaleDateString('pt-BR'),
+      h.hora||d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+      nomeTurno[_turnoDeHora(h.hora)]||'—',
+      h.doca||'',h.oc||'',h.rota||'',h.conf||'',
+      dur!==null?dur:'—'
+    ].join(';'));
+  });
+
+  const byDoca={};
+  entries.forEach(h=>{
+    const k=h.doca?.trim()||'?';
+    if(!byDoca[k]) byDoca[k]={cargas:0,d:[]};
+    byDoca[k].cargas++;
+    const dur=_duracaoMin(h);if(dur!==null) byDoca[k].d.push(dur);
+  });
+  linhas.push('','=== RANKING DOCAS (por cargas) ===','Posição;Doca;Cargas;T.Total(min);T.Médio(min);Mais rápido(min);Mais lento(min);Rank velocidade');
+  const docaEntries=Object.entries(byDoca).sort((a,b)=>b[1].cargas-a[1].cargas);
+  // rank de velocidade
+  const velRank=[...Object.entries(byDoca)]
+    .filter(([,v])=>v.d.length)
+    .sort((a,b)=>{
+      const ma=Math.round(a[1].d.reduce((x,y)=>x+y,0)/a[1].d.length);
+      const mb=Math.round(b[1].d.reduce((x,y)=>x+y,0)/b[1].d.length);
+      return ma-mb;
+    }).map(([d],i)=>({d,rv:i+1}));
+  const velMap={};velRank.forEach(({d,rv})=>velMap[d]=rv);
+  docaEntries.forEach(([d,v],i)=>{
+    const med=v.d.length?Math.round(v.d.reduce((a,b)=>a+b,0)/v.d.length):null;
+    const total=v.d.length?v.d.reduce((a,b)=>a+b,0):null;
+    linhas.push(`${i+1};Doca ${d};${v.cargas};${total??'—'};${med??'—'};${v.d.length?Math.min(...v.d):'—'};${v.d.length?Math.max(...v.d):'—'};${velMap[d]??'—'}`);
+  });
+
+  linhas.push('','=== TOP 3 TEMPO MÉDIO ===','Posição;Doca;T.Médio(min);Cargas');
+  velRank.slice(0,3).forEach(({d,rv})=>{
+    const v=byDoca[d];
+    const med=Math.round(v.d.reduce((a,b)=>a+b,0)/v.d.length);
+    linhas.push(`${rv};Doca ${d};${med};${v.cargas}`);
+  });
+
+  const byConf={};
+  entries.forEach(h=>{const c=h.conf?.trim()||'(sem nome)';byConf[c]=(byConf[c]||0)+1;});
+  linhas.push('','=== RANKING CONFERENTES ===','Posição;Conferente;Total');
+  Object.entries(byConf).sort((a,b)=>b[1]-a[1]).forEach(([n,c],i)=>linhas.push(`${i+1};${n};${c}`));
+
+  const label=filtroData||new Date().toISOString().slice(0,10);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+linhas.join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download=`relatorio_dockcheck_${label}.csv`;
+  a.click();
+  toast('Relatório exportado!');
+}
+
+init();
+</script>
+</body>
+</html>
