@@ -315,7 +315,21 @@ tr:hover td{background:var(--surf2)}
 .ia-thinking span:nth-child(3){animation-delay:.4s}
 @keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 
-/* PROGRESS BAR OC FILA */
+/* ── Avaliação de carga ── */
+.stbtn-multi{font-size:12px;padding:7px 12px}
+.stbtn-multi.on{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+#cg-ok.on{border-color:var(--grn);background:var(--grn-dim);color:var(--grn)}
+#cg-irr.on{border-color:var(--acc);background:var(--acc-dim);color:var(--acc)}
+#cg-risc.on{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+
+/* Badge de estado da carga no histórico */
+.carga-badge{display:inline-flex;align-items:center;gap:4px;border-radius:5px;font-size:11px;font-weight:700;padding:3px 8px;text-transform:uppercase;letter-spacing:.5px;margin-left:6px}
+.carga-ok{background:var(--grn-dim);color:var(--grn);border:1px solid rgba(16,185,129,.3)}
+.carga-irr{background:var(--acc-dim);color:var(--acc);border:1px solid rgba(245,158,11,.3)}
+.carga-risc{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+
+/* Seletor de template */
+#tmpl-pad-btn.on,#tmpl-siren-btn.on{border-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
 .oc-progress{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
 .oc-pip{width:8px;height:8px;border-radius:50%;background:var(--bord2);transition:background .3s}
 .oc-pip.done{background:var(--grn)}
