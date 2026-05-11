@@ -13,7 +13,7 @@
 
 /**
  * Gera a mensagem de conferência.
- * Suporta dois modos: padrão (template configurável) e SIREN PRO.
+ * Suporta dois modos: padrão (template configurável) e DockCheck Pro.
  * Avaliação de carga é OPCIONAL — não bloqueia o envio.
  * @returns {string} mensagem gerada
  */
@@ -49,8 +49,8 @@ function gerarMsg() {
   let msg = '';
 
   if (_tmplMode === 'siren') {
-    // ── Template SIREN PRO ──
-    msg = TMPL_SIREN;
+    // ── Template DockCheck Pro ──
+    msg = TMPL_DOCKPRO;
   } else {
     // ── Template padrão (configurável) ──
     msg = storage.get(K_TMPL, '') || TMPL_PAD;
@@ -318,10 +318,10 @@ function _cargaEstadoInfo(estado) {
    SELETOR DE TEMPLATE
 ════════════════════════════════════════════════════════════ */
 
-let _tmplMode = 'padrao'; // 'padrao' ou 'siren'
+let _tmplMode = 'siren'; // padrão: DockCheck Pro
 
 /**
- * Alterna entre template padrão e SIREN PRO.
+ * Alterna entre template padrão e DockCheck Pro.
  * @param {'padrao'|'siren'} modo
  */
 function setTmplMode(modo) {
@@ -332,11 +332,11 @@ function setTmplMode(modo) {
 }
 
 /* ════════════════════════════════════════════════════════════
-   TEMPLATE SIREN PRO
+   TEMPLATE DockCheck Pro
 ════════════════════════════════════════════════════════════ */
 
-const TMPL_SIREN = `══════════════════
-📦 STATUS DE EXPEDIÇÃO
+const TMPL_DOCKPRO = `══════════════════
+📦 DOCKCHECK PRO
 
 🚚 ROTA: [rota]
 🏢 TRANS.: [transp]
