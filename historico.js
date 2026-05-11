@@ -66,6 +66,13 @@ function renderHist() {
       ? ` · ⏱ ${_fmtSec(h.duracaoSeg)}`
       : (h.hora ? ` · ${h.hora}` : '');
 
+    // Badge de estado da carga
+    let cargaBadge = '';
+    if (h.cargaEstado) {
+      const info = _cargaEstadoInfo(h.cargaEstado);
+      cargaBadge = `<span class="carga-badge ${info.cls}">${info.emoji} ${info.label}</span>`;
+    }
+
     return `<div class="hitem">
       <div class="hthumb">${thumb}</div>
       <div class="hbody">
@@ -74,8 +81,9 @@ function renderHist() {
           ${h.tipo === 'tabela'
             ? `Tabela — ${h.rows?.length || 0} linhas`
             : `Doca ${h.doca || '?'} · OC ${h.oc || '?'} · ${h.conf || '?'}`
-          }${qtd}
+          }${qtd}${cargaBadge}
         </div>
+        ${h.cargaProblemas ? `<div style="font-size:11px;color:var(--red);margin-top:2px">⚠️ ${h.cargaProblemas}</div>` : ''}
         ${h.rota ? `<div style="font-size:12px;color:var(--mut)">${h.rota}${h.transportadora ? ' · ' + h.transportadora : ''}</div>` : ''}
         <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
           ${h.mensagem ? `<button class="btn btn-ghost btn-sm" onclick="copiarHist('${h.id}')">📋 Copiar</button>` : ''}

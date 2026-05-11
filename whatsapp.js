@@ -12,35 +12,71 @@
 ════════════════════════════════════════════════════════════ */
 
 /**
- * Gera a mensagem de conferência a partir do template configurado.
- * Substitui todos os placeholders pelos valores dos campos.
+ * Gera a mensagem de conferência.
+ * Suporta dois modos: padrão (template configurável) e SIREN PRO.
+ * Inclui estado da carga e problemas identificados.
  * @returns {string} mensagem gerada
  */
 function gerarMsg() {
-  const tmpl = storage.get(K_TMPL, '') || TMPL_PAD;
-  const now  = new Date();
+  const now = new Date();
+
+  // ── Valores base ──
+  const estado    = document.getElementById('f-carga-estado').value || '';
+  const problemas = document.getElementById('f-carga-problemas').value || '';
+  const estadoInfo = estado ? _cargaEstadoInfo(estado) : null;
 
   const vals = {
-    rota:     document.getElementById('f-rota').value    || '—',
-    transp:   document.getElementById('f-transp').value  || '—',
-    oc:       document.getElementById('f-oc').value      || '—',
-    doca:     document.getElementById('f-doca').value    || '—',
-    tubos:    document.getElementById('f-tubos').value   || 'Conferidos',
-    caixa:    document.getElementById('f-caixa').value   || 'Conferida',
-    conf:     document.getElementById('f-conf').value    || '—',
-    aux1:     document.getElementById('f-aux1').value    || '—',
-    aux2:     document.getElementById('f-aux2').value    || '—',
-    obs:      document.getElementById('f-obs').value     || 'Nenhuma',
-    hora:     document.getElementById('f-hora').value    || now.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }),
+    rota:     document.getElementById('f-rota').value     || '—',
+    transp:   document.getElementById('f-transp').value   || '—',
+    oc:       document.getElementById('f-oc').value       || '—',
+    doca:     document.getElementById('f-doca').value     || '—',
+    tubos:    document.getElementById('f-tubos').value    || 'Conferidos',
+    caixa:    document.getElementById('f-caixa').value    || 'Conferida',
+    conf:     document.getElementById('f-conf').value     || '—',
+    aux1:     document.getElementById('f-aux1').value     || '—',
+    aux2:     document.getElementById('f-aux2').value     || '—',
+    obs:      document.getElementById('f-obs').value      || 'Nenhuma',
+    hora:     document.getElementById('f-hora').value     || now.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }),
     data:     now.toLocaleDateString('pt-BR'),
-    pedidos:  document.getElementById('f-pedidos').value || '—',
+    pedidos:  document.getElementById('f-pedidos').value  || '—',
     clientes: document.getElementById('f-clientes').value || '—',
+    // Campos de avaliação de carga
+    carga_estado:       estadoInfo ? estadoInfo.label : 'NÃO AVALIADA',
+    carga_estado_emoji: estadoInfo ? estadoInfo.emoji : '📦',
+    carga_problemas_linha: problemas
+      ? `• Problemas: ${problemas}`
+      : '',
   };
 
-  let msg = tmpl;
+  let msg = '';
+
+  if (_tmplMode === 'siren') {
+    // ── Template SIREN PRO ──
+    msg = TMPL_SIREN;
+  } else {
+    // ── Template padrão (configurável) ──
+    msg = storage.get(K_TMPL, '') || TMPL_PAD;
+
+    // Adiciona bloco de carga ao template padrão se avaliado
+    if (estado) {
+      const cargaBloco = `\nEstado da carga: ${estadoInfo.emoji} ${estadoInfo.label}` +
+        (problemas ? `\nProblemas: ${problemas}` : '');
+      // Insere antes de OBS se existir, senão no final
+      if (msg.includes('[obs]')) {
+        msg = msg.replace('[obs]', `[obs]${cargaBloco}`);
+      } else {
+        msg += cargaBloco;
+      }
+    }
+  }
+
+  // ── Substitui todos os placeholders ──
   for (const [k, v] of Object.entries(vals)) {
     msg = msg.replaceAll(`[${k}]`, v);
   }
+
+  // Remove linha vazia se carga_problemas_linha for vazio
+  msg = msg.replace(/\n\n+/g, '\n\n').trim();
 
   document.getElementById('msgbox').textContent = msg;
   return msg;
@@ -176,6 +212,8 @@ function registrarEnvio() {
     pedidos:        document.getElementById('f-pedidos').value,
     clientes:       document.getElementById('f-clientes').value,
     transportadora: document.getElementById('f-transp').value,
+    cargaEstado:    document.getElementById('f-carga-estado').value || '',
+    cargaProblemas: document.getElementById('f-carga-problemas').value || '',
     duracaoSeg,
     mensagem:       msg,
     fotos:          [...fotosCAM]
@@ -192,6 +230,14 @@ function registrarEnvio() {
   renderFotosGrid();
   document.getElementById('f-obs').value = '';
 
+  // Limpa avaliação de carga
+  document.getElementById('f-carga-estado').value   = '';
+  document.getElementById('f-carga-problemas').value = '';
+  ['cg-ok','cg-irr','cg-risc'].forEach(id => document.getElementById(id)?.classList.remove('on'));
+  document.querySelectorAll('.stbtn-multi').forEach(b => b.classList.remove('on'));
+  document.getElementById('carga-problemas-wrap').style.display = 'none';
+  _problemasSet.clear();
+
   // Reset horário para agora
   const now = new Date();
   document.getElementById('f-hora').value =
@@ -205,3 +251,125 @@ function registrarEnvio() {
   if (docaVal) buscarEquipe(docaVal);
   toast('✅ Conferência registrada! Próxima OC carregada.');
 }
+
+/* ════════════════════════════════════════════════════════════
+   AVALIAÇÃO DE CARGA
+════════════════════════════════════════════════════════════ */
+
+/** Conjunto de problemas selecionados */
+let _problemasSet = new Set();
+
+/**
+ * Define o estado geral da carga e exibe/oculta painel de problemas.
+ * @param {'OK'|'IRR'|'RISC'} estado
+ */
+function setCargaEstado(estado) {
+  document.getElementById('f-carga-estado').value = estado;
+
+  // Reset visual dos botões de estado
+  ['cg-ok','cg-irr','cg-risc'].forEach(id =>
+    document.getElementById(id)?.classList.remove('on')
+  );
+  const map = { OK:'cg-ok', IRR:'cg-irr', RISC:'cg-risc' };
+  document.getElementById(map[estado])?.classList.add('on');
+
+  // Mostra painel de problemas se irregular ou risco
+  const wrap = document.getElementById('carga-problemas-wrap');
+  if (wrap) {
+    wrap.style.display = (estado === 'IRR' || estado === 'RISC') ? 'block' : 'none';
+  }
+
+  // Limpa problemas se voltou para OK
+  if (estado === 'OK') {
+    _problemasSet.clear();
+    document.querySelectorAll('.stbtn-multi').forEach(b => b.classList.remove('on'));
+    document.getElementById('f-carga-problemas').value = '';
+  }
+}
+
+/**
+ * Alterna seleção de um problema específico.
+ * @param {string} problema
+ */
+function toggleProblema(problema) {
+  if (_problemasSet.has(problema)) {
+    _problemasSet.delete(problema);
+  } else {
+    _problemasSet.add(problema);
+  }
+
+  // Atualiza visual — encontra o botão pelo texto
+  document.querySelectorAll('.stbtn-multi').forEach(btn => {
+    const txt = btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+    if (txt === problema) btn.classList.toggle('on', _problemasSet.has(problema));
+  });
+
+  document.getElementById('f-carga-problemas').value = [..._problemasSet].join(', ');
+}
+
+/**
+ * Retorna label e emoji do estado da carga.
+ * @param {string} estado
+ * @returns {{label:string, emoji:string, cls:string}}
+ */
+function _cargaEstadoInfo(estado) {
+  const map = {
+    OK:   { label: 'BEM ARRUMADA',    emoji: '✅', cls: 'carga-ok'   },
+    IRR:  { label: 'IRREGULAR',       emoji: '⚠️', cls: 'carga-irr'  },
+    RISC: { label: 'RISCO DE AVARIA', emoji: '🚨', cls: 'carga-risc' },
+  };
+  return map[estado] || { label: estado, emoji: '📦', cls: 'carga-ok' };
+}
+
+/* ════════════════════════════════════════════════════════════
+   SELETOR DE TEMPLATE
+════════════════════════════════════════════════════════════ */
+
+let _tmplMode = 'padrao'; // 'padrao' ou 'siren'
+
+/**
+ * Alterna entre template padrão e SIREN PRO.
+ * @param {'padrao'|'siren'} modo
+ */
+function setTmplMode(modo) {
+  _tmplMode = modo;
+  document.getElementById('tmpl-pad-btn')?.classList.toggle('on', modo === 'padrao');
+  document.getElementById('tmpl-siren-btn')?.classList.toggle('on', modo === 'siren');
+  gerarMsg(); // atualiza preview imediatamente
+}
+
+/* ════════════════════════════════════════════════════════════
+   TEMPLATE SIREN PRO
+════════════════════════════════════════════════════════════ */
+
+const TMPL_SIREN = `══════════════════
+📦 STATUS DE EXPEDIÇÃO
+
+🚚 ROTA: [rota]
+🏢 TRANS.: [transp]
+📄 OC: [oc]
+🚪 DOCA: [doca]
+
+📊 OPERAÇÃO
+• PED.: [pedidos]
+• CLI.: [clientes]
+
+✅ CHECKLIST
+• Tubos: [tubos]
+• CX D'ÁGUA: [caixa]
+
+📦 ESTADO DA CARGA
+• [carga_estado_emoji] [carga_estado]
+[carga_problemas_linha]
+
+👥 EQUIPE
+• CONF.: [conf]
+• AUX.: [aux1] / [aux2]
+
+📝 OCORRÊNCIA
+• [obs]
+
+⏰ FINALIZAÇÃO
+• Hora: [hora]
+• Data: [data]
+══════════════════`;
