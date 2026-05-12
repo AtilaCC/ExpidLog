@@ -47,73 +47,136 @@
 ════════════════════════════════════════ -->
 <section class="tab" id="tab-dashboard">
 
-  <!-- STATUS DO SISTEMA -->
-  <div class="dash-system-bar">
-    <div class="dash-sys-dot" id="dash-sys-dot"></div>
-    <span id="dash-sys-label">SISTEMA OPERACIONAL</span>
-    <span class="dash-sys-time" id="dash-sys-time">--:--:--</span>
-    <button class="btn btn-ghost btn-xs" onclick="renderDashboard()" style="margin-left:auto">↻ Atualizar</button>
-  </div>
-
-  <!-- CARDS PRINCIPAIS -->
-  <div class="dash-grid-4">
-    <div class="dash-card dash-card-blue">
-      <div class="dash-card-icon">🏭</div>
-      <div class="dash-card-num" id="dash-docas-ativas">0</div>
-      <div class="dash-card-label">Docas em operação</div>
-      <div class="dash-card-bar"><div class="dash-card-bar-fill blue" id="dash-bar-ativas" style="width:0%"></div></div>
+  <!-- HEADER OPERACIONAL -->
+  <div class="dh-header">
+    <div class="dh-header-left">
+      <div class="dh-pulse-ring"></div>
+      <div>
+        <div class="dh-header-title">CENTRAL OPERACIONAL</div>
+        <div class="dh-header-sub" id="dash-turno-label">Turno — --:-- às --:--</div>
+      </div>
     </div>
-    <div class="dash-card dash-card-green">
-      <div class="dash-card-icon">✅</div>
-      <div class="dash-card-num" id="dash-ocs-ok">0</div>
-      <div class="dash-card-label">OCs finalizadas</div>
-      <div class="dash-card-bar"><div class="dash-card-bar-fill green" id="dash-bar-ok" style="width:0%"></div></div>
-    </div>
-    <div class="dash-card dash-card-red">
-      <div class="dash-card-icon">🔴</div>
-      <div class="dash-card-num" id="dash-docas-atraso">0</div>
-      <div class="dash-card-label">Docas em atraso</div>
-      <div class="dash-card-bar"><div class="dash-card-bar-fill red" id="dash-bar-atraso" style="width:0%"></div></div>
-    </div>
-    <div class="dash-card dash-card-acc">
-      <div class="dash-card-icon">⏱</div>
-      <div class="dash-card-num" id="dash-tempo-med">—</div>
-      <div class="dash-card-label">Tempo médio</div>
-      <div class="dash-card-bar"><div class="dash-card-bar-fill acc" id="dash-bar-tempo" style="width:50%"></div></div>
+    <div class="dh-header-right">
+      <div class="dh-clock" id="dash-sys-time">--:--:--</div>
+      <button class="dh-refresh-btn" onclick="renderDashboard()" title="Atualizar">↻</button>
     </div>
   </div>
 
-  <!-- PAINEL OPERACIONAL — DOCAS ATIVAS -->
-  <div class="dash-section-title">⚡ DOCAS EM OPERAÇÃO AGORA</div>
-  <div id="dash-docas-painel">
-    <div class="dash-empty">Nenhuma doca em operação no momento.</div>
+  <!-- KPI GRID -->
+  <div class="dh-kpi-grid">
+
+    <div class="dh-kpi dh-kpi-green" id="kpi-ativas">
+      <div class="dh-kpi-glow green"></div>
+      <div class="dh-kpi-top">
+        <div class="dh-kpi-icon">🏭</div>
+        <div class="dh-kpi-badge green" id="kpi-badge-ativas">AO VIVO</div>
+      </div>
+      <div class="dh-kpi-num" id="dash-docas-ativas">0</div>
+      <div class="dh-kpi-label">Docas em operação</div>
+      <div class="dh-kpi-bar"><div class="dh-kpi-prog green" id="dash-bar-ativas" style="width:0%"></div></div>
+    </div>
+
+    <div class="dh-kpi dh-kpi-blue" id="kpi-ocs">
+      <div class="dh-kpi-glow blue"></div>
+      <div class="dh-kpi-top">
+        <div class="dh-kpi-icon">✅</div>
+        <div class="dh-kpi-badge blue">TURNO</div>
+      </div>
+      <div class="dh-kpi-num" id="dash-ocs-ok">0</div>
+      <div class="dh-kpi-label">OCs finalizadas</div>
+      <div class="dh-kpi-bar"><div class="dh-kpi-prog blue" id="dash-bar-ok" style="width:0%"></div></div>
+    </div>
+
+    <div class="dh-kpi dh-kpi-red" id="kpi-atraso">
+      <div class="dh-kpi-glow red"></div>
+      <div class="dh-kpi-top">
+        <div class="dh-kpi-icon">⚠️</div>
+        <div class="dh-kpi-badge red" id="kpi-badge-atraso">CRÍTICO</div>
+      </div>
+      <div class="dh-kpi-num" id="dash-docas-atraso">0</div>
+      <div class="dh-kpi-label">Docas em atraso</div>
+      <div class="dh-kpi-bar"><div class="dh-kpi-prog red" id="dash-bar-atraso" style="width:0%"></div></div>
+    </div>
+
+    <div class="dh-kpi dh-kpi-acc" id="kpi-tempo">
+      <div class="dh-kpi-glow acc"></div>
+      <div class="dh-kpi-top">
+        <div class="dh-kpi-icon">⏱</div>
+        <div class="dh-kpi-badge acc">MÉDIA</div>
+      </div>
+      <div class="dh-kpi-num" id="dash-tempo-med">—</div>
+      <div class="dh-kpi-label">Tempo médio</div>
+      <div class="dh-kpi-bar"><div class="dh-kpi-prog acc" id="dash-bar-tempo" style="width:0%"></div></div>
+    </div>
+
   </div>
 
-  <!-- ALERTAS DE ATRASO -->
+  <!-- RESUMO 4 COLUNAS -->
+  <div class="dh-resumo-strip">
+    <div class="dh-resumo-pill">
+      <span class="dh-resumo-val" id="dash-total-ped">—</span>
+      <span class="dh-resumo-lbl">Pedidos</span>
+    </div>
+    <div class="dh-resumo-sep"></div>
+    <div class="dh-resumo-pill">
+      <span class="dh-resumo-val" id="dash-total-cli">—</span>
+      <span class="dh-resumo-lbl">Clientes</span>
+    </div>
+    <div class="dh-resumo-sep"></div>
+    <div class="dh-resumo-pill">
+      <span class="dh-resumo-val" id="dash-total-transp">—</span>
+      <span class="dh-resumo-lbl">Transportadoras</span>
+    </div>
+    <div class="dh-resumo-sep"></div>
+    <div class="dh-resumo-pill">
+      <span class="dh-resumo-val" id="dash-total-conf">—</span>
+      <span class="dh-resumo-lbl">Conferentes</span>
+    </div>
+  </div>
+
+  <!-- ALERTAS -->
   <div id="dash-alertas-wrap" style="display:none">
-    <div class="dash-section-title" style="color:var(--red)">🚨 ALERTAS — DOCAS ACIMA DO LIMITE</div>
+    <div class="dh-section-title red">
+      <span class="dh-section-dot red blink"></span>
+      ALERTAS OPERACIONAIS
+    </div>
     <div id="dash-alertas"></div>
   </div>
 
-  <!-- RANKING DE EQUIPES -->
-  <div class="dash-section-title">🏆 RANKING DE EQUIPES — TURNO ATUAL</div>
+  <!-- DOCAS EM OPERAÇÃO -->
+  <div class="dh-section-title">
+    <span class="dh-section-dot green blink"></span>
+    DOCAS EM OPERAÇÃO AGORA
+  </div>
+  <div id="dash-docas-painel">
+    <div class="dh-empty">
+      <div class="dh-empty-icon">🏭</div>
+      <div>Nenhuma doca em operação no momento</div>
+    </div>
+  </div>
+
+  <!-- RANKING EQUIPES -->
+  <div class="dh-section-title">
+    <span class="dh-section-dot acc"></span>
+    RANKING DE EQUIPES — TURNO ATUAL
+  </div>
   <div id="dash-ranking-eq">
-    <div class="dash-empty">Nenhuma operação registrada ainda.</div>
+    <div class="dh-empty">
+      <div class="dh-empty-icon">👥</div>
+      <div>Nenhuma operação registrada ainda</div>
+    </div>
   </div>
 
-  <!-- RANKING DE DOCAS -->
-  <div class="dash-section-title">📊 PRODUTIVIDADE POR DOCA</div>
-  <div id="dash-ranking-docas">
-    <div class="dash-empty">Nenhuma operação registrada ainda.</div>
+  <!-- RANKING DOCAS -->
+  <div class="dh-section-title">
+    <span class="dh-section-dot blue"></span>
+    PRODUTIVIDADE POR DOCA
   </div>
-
-  <!-- RESUMO DO TURNO -->
-  <div class="dash-section-title">📋 RESUMO DO TURNO</div>
-  <div class="dash-resumo-grid" id="dash-resumo">
-    <div class="dash-resumo-item"><span id="dash-total-ped">—</span><small>Pedidos</small></div>
-    <div class="dash-resumo-item"><span id="dash-total-cli">—</span><small>Clientes</small></div>
-    <div class="dash-resumo-item"><span id="dash-total-transp">—</span><small>Transportadoras</small></div>
-    <div class="dash-resumo-item"><span id="dash-total-conf">—</span><small>Conferentes</small></div>
+  <div id="dash-ranking-docas" style="padding-bottom:40px">
+    <div class="dh-empty">
+      <div class="dh-empty-icon">📊</div>
+      <div>Nenhuma operação registrada ainda</div>
+    </div>
   </div>
 
 </section>
