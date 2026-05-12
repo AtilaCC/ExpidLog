@@ -33,6 +33,7 @@
 <!-- NAV -->
 <nav class="nav">
   <button class="ntab on"  onclick="goTab('conferencia',this)">📦 Conferência</button>
+  <button class="ntab"     onclick="goTab('dashboard',this)">🖥 Dashboard</button>
   <button class="ntab"     onclick="goTab('cloud',this)">📷 Ler Tabela</button>
   <button class="ntab"     onclick="goTab('equipes',this)">👥 Equipes</button>
   <button class="ntab"     onclick="goTab('historico',this)">🕐 Histórico</button>
@@ -40,6 +41,82 @@
   <button class="ntab"     onclick="goTab('ia',this)">🤖 IA</button>
   <button class="ntab"     onclick="goTab('config',this)">⚙️ Config</button>
 </nav>
+
+<!-- ════════════════════════════════════════
+     TAB: DASHBOARD OPERACIONAL
+════════════════════════════════════════ -->
+<section class="tab" id="tab-dashboard">
+
+  <!-- STATUS DO SISTEMA -->
+  <div class="dash-system-bar">
+    <div class="dash-sys-dot" id="dash-sys-dot"></div>
+    <span id="dash-sys-label">SISTEMA OPERACIONAL</span>
+    <span class="dash-sys-time" id="dash-sys-time">--:--:--</span>
+    <button class="btn btn-ghost btn-xs" onclick="renderDashboard()" style="margin-left:auto">↻ Atualizar</button>
+  </div>
+
+  <!-- CARDS PRINCIPAIS -->
+  <div class="dash-grid-4">
+    <div class="dash-card dash-card-blue">
+      <div class="dash-card-icon">🏭</div>
+      <div class="dash-card-num" id="dash-docas-ativas">0</div>
+      <div class="dash-card-label">Docas em operação</div>
+      <div class="dash-card-bar"><div class="dash-card-bar-fill blue" id="dash-bar-ativas" style="width:0%"></div></div>
+    </div>
+    <div class="dash-card dash-card-green">
+      <div class="dash-card-icon">✅</div>
+      <div class="dash-card-num" id="dash-ocs-ok">0</div>
+      <div class="dash-card-label">OCs finalizadas</div>
+      <div class="dash-card-bar"><div class="dash-card-bar-fill green" id="dash-bar-ok" style="width:0%"></div></div>
+    </div>
+    <div class="dash-card dash-card-red">
+      <div class="dash-card-icon">🔴</div>
+      <div class="dash-card-num" id="dash-docas-atraso">0</div>
+      <div class="dash-card-label">Docas em atraso</div>
+      <div class="dash-card-bar"><div class="dash-card-bar-fill red" id="dash-bar-atraso" style="width:0%"></div></div>
+    </div>
+    <div class="dash-card dash-card-acc">
+      <div class="dash-card-icon">⏱</div>
+      <div class="dash-card-num" id="dash-tempo-med">—</div>
+      <div class="dash-card-label">Tempo médio</div>
+      <div class="dash-card-bar"><div class="dash-card-bar-fill acc" id="dash-bar-tempo" style="width:50%"></div></div>
+    </div>
+  </div>
+
+  <!-- PAINEL OPERACIONAL — DOCAS ATIVAS -->
+  <div class="dash-section-title">⚡ DOCAS EM OPERAÇÃO AGORA</div>
+  <div id="dash-docas-painel">
+    <div class="dash-empty">Nenhuma doca em operação no momento.</div>
+  </div>
+
+  <!-- ALERTAS DE ATRASO -->
+  <div id="dash-alertas-wrap" style="display:none">
+    <div class="dash-section-title" style="color:var(--red)">🚨 ALERTAS — DOCAS ACIMA DO LIMITE</div>
+    <div id="dash-alertas"></div>
+  </div>
+
+  <!-- RANKING DE EQUIPES -->
+  <div class="dash-section-title">🏆 RANKING DE EQUIPES — TURNO ATUAL</div>
+  <div id="dash-ranking-eq">
+    <div class="dash-empty">Nenhuma operação registrada ainda.</div>
+  </div>
+
+  <!-- RANKING DE DOCAS -->
+  <div class="dash-section-title">📊 PRODUTIVIDADE POR DOCA</div>
+  <div id="dash-ranking-docas">
+    <div class="dash-empty">Nenhuma operação registrada ainda.</div>
+  </div>
+
+  <!-- RESUMO DO TURNO -->
+  <div class="dash-section-title">📋 RESUMO DO TURNO</div>
+  <div class="dash-resumo-grid" id="dash-resumo">
+    <div class="dash-resumo-item"><span id="dash-total-ped">—</span><small>Pedidos</small></div>
+    <div class="dash-resumo-item"><span id="dash-total-cli">—</span><small>Clientes</small></div>
+    <div class="dash-resumo-item"><span id="dash-total-transp">—</span><small>Transportadoras</small></div>
+    <div class="dash-resumo-item"><span id="dash-total-conf">—</span><small>Conferentes</small></div>
+  </div>
+
+</section>
 
 <!-- ════════════════════════════════════════
      TAB: CONFERÊNCIA
@@ -600,6 +677,7 @@
 <script src="ocr.js"></script>
 <script src="whatsapp.js"></script>
 <script src="relatorio.js"></script>
+<script src="dashboard.js"></script>
 <script src="ia.js"></script>
 <script src="app.js"></script>
 

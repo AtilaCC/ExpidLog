@@ -66,12 +66,18 @@ function tickClock() {
  * @param {HTMLElement} b — botão clicado
  */
 function goTab(n, b) {
+  // Pausa dashboard se sair da aba
+  if (document.getElementById('tab-dashboard')?.classList.contains('on')) {
+    if (typeof dashboardInativo === 'function') dashboardInativo();
+  }
+
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.ntab').forEach(x => x.classList.remove('on'));
   document.getElementById('tab-' + n).classList.add('on');
   b.classList.add('on');
 
   // Render lazy ao entrar na aba
+  if (n === 'dashboard')  dashboardAtivo();
   if (n === 'historico')  renderHist();
   if (n === 'equipes')    renderEquipes();
   if (n === 'relatorio')  renderRelatorio();
