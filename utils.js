@@ -12,6 +12,7 @@
 
 const TMPL_PAD = `Rota: [rota]
 Transportadora: [transp]
+Placa: [placa]
 OC: [oc]
 Doca: [doca]
 Pedidos: [pedidos]
