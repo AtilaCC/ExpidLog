@@ -28,6 +28,7 @@ function gerarMsg() {
   const vals = {
     rota:     document.getElementById('f-rota').value     || '—',
     transp:   document.getElementById('f-transp').value   || '—',
+    placa:    document.getElementById('f-placa').value    || '—',
     oc:       document.getElementById('f-oc').value       || '—',
     doca:     document.getElementById('f-doca').value     || '—',
     tubos:    document.getElementById('f-tubos').value    || 'Conferidos',
@@ -340,6 +341,7 @@ const TMPL_DOCKPRO = `══════════════════
 
 🚚 ROTA: [rota]
 🏢 TRANS.: [transp]
+🚛 PLACA: [placa]
 📄 OC: [oc]
 🚪 DOCA: [doca]
 
