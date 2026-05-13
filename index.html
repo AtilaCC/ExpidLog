@@ -43,7 +43,7 @@
 </nav>
 
 <!-- ════════════════════════════════════════
-     TAB: DASHBOARD OPERACIONAL
+     TAB: DASHBOARD OPERACIONAL v3
 ════════════════════════════════════════ -->
 <section class="tab" id="tab-dashboard">
 
@@ -57,22 +57,29 @@
       </div>
     </div>
     <div class="dh-header-right">
-      <div class="dh-clock" id="dash-sys-time">--:--:--</div>
+      <div>
+        <div class="dh-clock" id="dash-sys-time">--:--:--</div>
+        <div class="dh-live-badge"><span class="dh-live-dot"></span>LIVE</div>
+      </div>
       <button class="dh-refresh-btn" onclick="renderDashboard()" title="Atualizar">↻</button>
     </div>
   </div>
 
-  <!-- KPI GRID -->
+  <!-- KPI GRID 2x2 — DENSO -->
   <div class="dh-kpi-grid">
 
     <div class="dh-kpi dh-kpi-green" id="kpi-ativas">
       <div class="dh-kpi-glow green"></div>
       <div class="dh-kpi-top">
         <div class="dh-kpi-icon">🏭</div>
-        <div class="dh-kpi-badge green" id="kpi-badge-ativas">AO VIVO</div>
+        <div class="dh-kpi-badge green blink-badge">● AO VIVO</div>
       </div>
       <div class="dh-kpi-num" id="dash-docas-ativas">0</div>
       <div class="dh-kpi-label">Docas em operação</div>
+      <div class="dh-kpi-micro">
+        <span id="kpi-micro-pendentes" class="dh-micro-val">—</span>
+        <span class="dh-micro-lbl">OCs pendentes</span>
+      </div>
       <div class="dh-kpi-bar"><div class="dh-kpi-prog green" id="dash-bar-ativas" style="width:0%"></div></div>
     </div>
 
@@ -84,6 +91,10 @@
       </div>
       <div class="dh-kpi-num" id="dash-ocs-ok">0</div>
       <div class="dh-kpi-label">OCs finalizadas</div>
+      <div class="dh-kpi-micro">
+        <span id="kpi-micro-efic" class="dh-micro-val">—</span>
+        <span class="dh-micro-lbl">eficiência</span>
+      </div>
       <div class="dh-kpi-bar"><div class="dh-kpi-prog blue" id="dash-bar-ok" style="width:0%"></div></div>
     </div>
 
@@ -95,6 +106,10 @@
       </div>
       <div class="dh-kpi-num" id="dash-docas-atraso">0</div>
       <div class="dh-kpi-label">Docas em atraso</div>
+      <div class="dh-kpi-micro">
+        <span id="kpi-micro-limite" class="dh-micro-val">+90min</span>
+        <span class="dh-micro-lbl">limite</span>
+      </div>
       <div class="dh-kpi-bar"><div class="dh-kpi-prog red" id="dash-bar-atraso" style="width:0%"></div></div>
     </div>
 
@@ -105,32 +120,45 @@
         <div class="dh-kpi-badge acc">MÉDIA</div>
       </div>
       <div class="dh-kpi-num" id="dash-tempo-med">—</div>
-      <div class="dh-kpi-label">Tempo médio</div>
+      <div class="dh-kpi-label">Tempo médio/OC</div>
+      <div class="dh-kpi-micro">
+        <span id="kpi-micro-meta" class="dh-micro-val">meta 90min</span>
+        <span class="dh-micro-lbl">referência</span>
+      </div>
       <div class="dh-kpi-bar"><div class="dh-kpi-prog acc" id="dash-bar-tempo" style="width:0%"></div></div>
     </div>
 
   </div>
 
-  <!-- RESUMO 4 COLUNAS -->
-  <div class="dh-resumo-strip">
-    <div class="dh-resumo-pill">
-      <span class="dh-resumo-val" id="dash-total-ped">—</span>
-      <span class="dh-resumo-lbl">Pedidos</span>
+  <!-- MINI KPI STRIP — RESUMO DO TURNO -->
+  <div class="dh-mini-strip">
+    <div class="dh-mini-kpi">
+      <div class="dh-mini-icon">📦</div>
+      <div class="dh-mini-body">
+        <div class="dh-mini-num" id="dash-total-ped">—</div>
+        <div class="dh-mini-lbl">Pedidos</div>
+      </div>
     </div>
-    <div class="dh-resumo-sep"></div>
-    <div class="dh-resumo-pill">
-      <span class="dh-resumo-val" id="dash-total-cli">—</span>
-      <span class="dh-resumo-lbl">Clientes</span>
+    <div class="dh-mini-kpi">
+      <div class="dh-mini-icon">👤</div>
+      <div class="dh-mini-body">
+        <div class="dh-mini-num" id="dash-total-cli">—</div>
+        <div class="dh-mini-lbl">Clientes</div>
+      </div>
     </div>
-    <div class="dh-resumo-sep"></div>
-    <div class="dh-resumo-pill">
-      <span class="dh-resumo-val" id="dash-total-transp">—</span>
-      <span class="dh-resumo-lbl">Transportadoras</span>
+    <div class="dh-mini-kpi">
+      <div class="dh-mini-icon">🚛</div>
+      <div class="dh-mini-body">
+        <div class="dh-mini-num" id="dash-total-transp">—</div>
+        <div class="dh-mini-lbl">Transportadoras</div>
+      </div>
     </div>
-    <div class="dh-resumo-sep"></div>
-    <div class="dh-resumo-pill">
-      <span class="dh-resumo-val" id="dash-total-conf">—</span>
-      <span class="dh-resumo-lbl">Conferentes</span>
+    <div class="dh-mini-kpi">
+      <div class="dh-mini-icon">👷</div>
+      <div class="dh-mini-body">
+        <div class="dh-mini-num" id="dash-total-conf">—</div>
+        <div class="dh-mini-lbl">Conferentes</div>
+      </div>
     </div>
   </div>
 
@@ -147,12 +175,10 @@
   <div class="dh-section-title">
     <span class="dh-section-dot green blink"></span>
     DOCAS EM OPERAÇÃO AGORA
+    <span id="dash-docas-count-label" class="dh-section-count"></span>
   </div>
   <div id="dash-docas-painel">
-    <div class="dh-empty">
-      <div class="dh-empty-icon">🏭</div>
-      <div>Nenhuma doca em operação no momento</div>
-    </div>
+    <div class="dh-empty"><div class="dh-empty-icon">🏭</div><div>Nenhuma doca em operação no momento</div></div>
   </div>
 
   <!-- RANKING EQUIPES -->
@@ -161,10 +187,7 @@
     RANKING DE EQUIPES — TURNO ATUAL
   </div>
   <div id="dash-ranking-eq">
-    <div class="dh-empty">
-      <div class="dh-empty-icon">👥</div>
-      <div>Nenhuma operação registrada ainda</div>
-    </div>
+    <div class="dh-empty"><div class="dh-empty-icon">👥</div><div>Nenhuma operação registrada ainda</div></div>
   </div>
 
   <!-- RANKING DOCAS -->
@@ -173,10 +196,7 @@
     PRODUTIVIDADE POR DOCA
   </div>
   <div id="dash-ranking-docas" style="padding-bottom:40px">
-    <div class="dh-empty">
-      <div class="dh-empty-icon">📊</div>
-      <div>Nenhuma operação registrada ainda</div>
-    </div>
+    <div class="dh-empty"><div class="dh-empty-icon">📊</div><div>Nenhuma operação registrada ainda</div></div>
   </div>
 
 </section>
