@@ -41,16 +41,16 @@ window.cargoCheckResult = null;
 
 // ─── Função principal de análise ─────────────────────────────
 async function analisarArrumacao() {
-  const fotos = window.fotosBase64 || [];
+  const fotos = fotosCAM || [];
 
   if (!fotos || fotos.length === 0) {
-    showToast('📷 Adicione pelo menos uma foto do caminhão para analisar.');
+    toast('📷 Adicione pelo menos uma foto do caminhão para analisar.');
     return;
   }
 
-  const apiKey = localStorage.getItem('dock_api_key') || '';
-  if (!apiKey || !apiKey.startsWith('sk-ant-')) {
-    showToast('🔑 Configure a API Key Anthropic na aba ⚙️ Config.');
+  const apiKey = storage.get(K_KEY, '');
+  if (!apiKey) {
+    toast('🔑 Configure a API Key Anthropic na aba ⚙️ Config.');
     return;
   }
 
@@ -77,9 +77,10 @@ async function analisarArrumacao() {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         messages: [
           {
