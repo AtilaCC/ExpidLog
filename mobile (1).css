@@ -1,0 +1,365 @@
+/* ════════════════════════════════════════════════════════════
+   DOCKCHECK PRO — MOBILE PREMIUM CSS · Fase 13 · Etapa 4
+
+   Adicionar no index.html após style.css:
+     <link rel="stylesheet" href="mobile.css">
+
+   Aplica APENAS em telas ≤ 768px.
+   Não sobrescreve nada do desktop.
+════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════
+   VARIÁVEIS MOBILE
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root {
+    --bottom-nav-h: 64px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --touch-min: 48px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   BODY — ESPAÇO PARA BOTTOM NAV
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
+  }
+
+  /* Oculta a nav horizontal existente no mobile */
+  .nav {
+    display: none !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   TOPBAR MOBILE
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 12px;
+    height: 52px;
+    min-height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .logo-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+
+  .clock {
+    font-size: 13px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   BOTTOM NAVIGATION BAR
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    height: calc(var(--bottom-nav-h) + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    background: #111318;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: stretch;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .mbnav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 4px;
+    min-height: var(--touch-min);
+    color: var(--mut);
+    transition: color .2s;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mbnav-btn.on {
+    color: var(--acc);
+  }
+
+  .mbnav-btn.on .mbnav-icon {
+    transform: scale(1.1);
+  }
+
+  .mbnav-icon {
+    font-size: 20px;
+    line-height: 1;
+    transition: transform .2s;
+  }
+
+  .mbnav-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  /* Indicador ativo (bolinha âmbar) */
+  .mbnav-btn.on::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--acc);
+  }
+
+  /* Botão "Mais" — abre menu de abas secundárias */
+  #mbnav-mais-menu {
+    position: fixed;
+    bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 8px);
+    left: 0;
+    right: 0;
+    z-index: 199;
+    background: #161b27;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    transform: translateY(110%);
+    transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  #mbnav-mais-menu.open {
+    transform: translateY(0);
+  }
+
+  .mbnav-extra-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 12px 8px;
+    cursor: pointer;
+    color: var(--txt);
+    min-height: var(--touch-min);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mbnav-extra-btn:active {
+    background: rgba(245,158,11,0.1);
+    border-color: rgba(245,158,11,0.3);
+  }
+
+  .mbnav-extra-icon { font-size: 22px; }
+  .mbnav-extra-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    text-align: center;
+    color: var(--mut);
+  }
+
+  /* Overlay do menu mais */
+  #mbnav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 198;
+    background: rgba(0,0,0,0.5);
+    display: none;
+  }
+
+  #mbnav-overlay.open {
+    display: block;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   TOUCH TARGETS — todos os botões e inputs
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .btn,
+  button:not(.mbnav-btn):not(.mbnav-extra-btn),
+  input[type="button"],
+  input[type="submit"] {
+    min-height: var(--touch-min);
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="time"],
+  select,
+  textarea {
+    min-height: var(--touch-min);
+    font-size: 16px !important; /* previne zoom no iOS */
+    padding: 10px 12px;
+  }
+
+  /* Live chips maiores */
+  .live-chip {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SWIPE ENTRE ABAS
+   Detectado via JS em mobile.js
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .tab {
+    touch-action: pan-y;
+    will-change: transform;
+  }
+
+  /* Animação de entrada de aba */
+  .tab.tab-slide-in-right {
+    animation: tabSlideInRight .25s ease;
+  }
+
+  .tab.tab-slide-in-left {
+    animation: tabSlideInLeft .25s ease;
+  }
+
+  @keyframes tabSlideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes tabSlideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   PULL-TO-REFRESH INDICADOR
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #ptr-indicator {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    background: rgba(245,158,11,0.08);
+    border-bottom: 1px solid rgba(245,158,11,0.2);
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Barlow Condensed', sans-serif;
+    color: var(--acc);
+    letter-spacing: .5px;
+    transform: translateY(-100%);
+    transition: transform .25s ease;
+    pointer-events: none;
+  }
+
+  #ptr-indicator.visible {
+    transform: translateY(0);
+  }
+
+  #ptr-indicator.refreshing .ptr-arrow {
+    animation: spin 1s linear infinite;
+  }
+
+  .ptr-arrow {
+    font-size: 16px;
+    display: inline-block;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   CARDS E GRIDS — otimização mobile
+════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* KPI grid — 2 colunas no mobile pequeno */
+  .dh-kpi-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Tabelas com scroll horizontal */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Cards sem padding excessivo */
+  .card, .cfg-section {
+    padding: 12px !important;
+  }
+
+  /* Seções com menos gap */
+  section.tab {
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SAFE AREA — notch e barra do sistema
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  #mobile-bottom-nav {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   FEEDBACK VISUAL DE TOQUE
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .btn:active,
+  .live-chip:active {
+    transform: scale(0.97);
+    transition: transform .1s;
+  }
+
+  /* Remove hover states no touch */
+  @media (hover: none) {
+    .btn:hover,
+    .ntab:hover {
+      background: initial;
+    }
+  }
+}
