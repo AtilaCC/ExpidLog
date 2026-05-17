@@ -243,6 +243,10 @@ function exportarBackup() {
  * 7. Registra Service Worker
  */
 async function init() {
+  // ── Fase 13: Tema e idioma — aplicar antes de qualquer render ──
+  if (typeof themeManager !== 'undefined') themeManager.init();
+  if (typeof i18n         !== 'undefined') i18n.init();
+
   // ── Skeleton loading enquanto o IDB abre ──
   _setLoadingUI(true);
 

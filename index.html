@@ -32,14 +32,14 @@
 
 <!-- NAV -->
 <nav class="nav">
-  <button class="ntab on"  onclick="goTab('conferencia',this)">📦 Conferência</button>
-  <button class="ntab"     onclick="goTab('dashboard',this)">🖥 Dashboard</button>
-  <button class="ntab"     onclick="goTab('cloud',this)">📷 Ler Tabela</button>
-  <button class="ntab"     onclick="goTab('equipes',this)">👥 Equipes</button>
-  <button class="ntab"     onclick="goTab('historico',this)">🕐 Histórico</button>
-  <button class="ntab"     onclick="goTab('relatorio',this)">📊 Relatório</button>
-  <button class="ntab"     onclick="goTab('ia',this)">🤖 IA</button>
-  <button class="ntab"     onclick="goTab('config',this)">⚙️ Config</button>
+  <button class="ntab on"  onclick="goTab('conferencia',this)" data-i18n="nav.conferencia">📦 Conferência</button>
+  <button class="ntab"     onclick="goTab('dashboard',this)"  data-i18n="nav.dashboard">🖥 Dashboard</button>
+  <button class="ntab"     onclick="goTab('cloud',this)"      data-i18n="nav.tabela">📷 Ler Tabela</button>
+  <button class="ntab"     onclick="goTab('equipes',this)"    data-i18n="nav.equipes">👥 Equipes</button>
+  <button class="ntab"     onclick="goTab('historico',this)"  data-i18n="nav.historico">🕐 Histórico</button>
+  <button class="ntab"     onclick="goTab('relatorio',this)"  data-i18n="nav.relatorio">📊 Relatório</button>
+  <button class="ntab"     onclick="goTab('ia',this)"         data-i18n="nav.ia">🤖 IA</button>
+  <button class="ntab"     onclick="goTab('config',this)"     data-i18n="nav.config">⚙️ Config</button>
 </nav>
 
 <!-- ════════════════════════════════════════
@@ -691,46 +691,72 @@
 ════════════════════════════════════════ -->
 <section class="tab" id="tab-config">
   <div class="card">
-    <div class="ctitle">🔑 API Key Anthropic (OCR + IA)</div>
-    <p class="hint" style="margin-bottom:10px">Necessária para extrair tabelas e análise IA. Salva só neste navegador.</p>
+    <div class="ctitle" data-i18n="cfg.apikey">🔑 API Key Anthropic (OCR + IA)</div>
+    <p class="hint" style="margin-bottom:10px" data-i18n="cfg.apikey.hint">Necessária para extrair tabelas e análise IA. Salva só neste navegador.</p>
     <div class="fg"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-ant-..."></div>
-    <div class="brow"><button class="btn btn-acc btn-sm" onclick="salvarKey()">💾 Salvar</button></div>
+    <div class="brow"><button class="btn btn-acc btn-sm" onclick="salvarKey()" data-i18n="btn.salvar">💾 Salvar</button></div>
   </div>
   <div class="card">
-    <div class="ctitle">⏱ Tempo médio alvo (minutos)</div>
-    <p class="hint" style="margin-bottom:10px">Usado pelo cronômetro para alertas de carga acima do tempo.</p>
-    <div class="fg"><label>Minutos</label><input type="number" id="cfg-tempo-alvo" placeholder="45" min="1" max="480"></div>
-    <div class="brow"><button class="btn btn-acc btn-sm" onclick="salvarTempoAlvo()">💾 Salvar</button></div>
+    <div class="ctitle" data-i18n="cfg.tempo">⏱ Tempo médio alvo (minutos)</div>
+    <p class="hint" style="margin-bottom:10px" data-i18n="cfg.tempo.hint">Usado pelo cronômetro para alertas de carga acima do tempo.</p>
+    <div class="fg"><label data-i18n="geral.minutos">Minutos</label><input type="number" id="cfg-tempo-alvo" placeholder="45" min="1" max="480"></div>
+    <div class="brow"><button class="btn btn-acc btn-sm" onclick="salvarTempoAlvo()" data-i18n="btn.salvar">💾 Salvar</button></div>
   </div>
   <div class="card">
-    <div class="ctitle">✏️ Template da Mensagem</div>
+    <div class="ctitle" data-i18n="cfg.tmpl">✏️ Template da Mensagem</div>
     <p class="hint" style="margin-bottom:10px">Placeholders: <code style="color:var(--grn)">[rota] [transp] [oc] [doca] [tubos] [caixa] [conf] [aux1] [aux2] [obs] [hora] [data] [pedidos] [clientes]</code></p>
     <textarea id="cfg-tmpl" rows="14" style="width:100%;background:var(--surf2);border:1.5px solid var(--bord);border-radius:8px;color:var(--txt);font-size:13px;padding:12px;resize:vertical;outline:none;font-family:'Barlow',sans-serif"></textarea>
     <div class="brow">
-      <button class="btn btn-acc btn-sm" onclick="salvarTmpl()">💾 Salvar</button>
-      <button class="btn btn-ghost btn-sm" onclick="resetTmpl()">↩ Padrão</button>
+      <button class="btn btn-acc btn-sm" onclick="salvarTmpl()" data-i18n="btn.salvar">💾 Salvar</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetTmpl()" data-i18n="btn.padrao">↩ Padrão</button>
     </div>
   </div>
   <div class="card">
-    <div class="ctitle">🧪 Dados de Teste</div>
-    <p class="hint" style="margin-bottom:10px">Tabela real com 20 linhas + equipes de teste.</p>
+    <div class="ctitle" data-i18n="cfg.teste">🧪 Dados de Teste</div>
+    <p class="hint" style="margin-bottom:10px" data-i18n="cfg.teste.hint">Tabela real com 20 linhas + equipes de teste.</p>
     <div class="brow">
-      <button class="btn btn-ghost btn-sm" onclick="resetEqTeste()">↩ Equipes de teste</button>
-      <button class="btn btn-ghost btn-sm" onclick="resetTabTeste()">↩ Tabela de teste</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetEqTeste()" data-i18n="btn.eq-teste">↩ Equipes de teste</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetTabTeste()" data-i18n="btn.tab-teste">↩ Tabela de teste</button>
     </div>
   </div>
   <div class="card">
-    <div class="ctitle">🗄️ Storage — Diagnóstico</div>
-    <p class="hint" style="margin-bottom:10px">IndexedDB ativo desde a Fase 2. Dados operacionais migrados automaticamente do localStorage.</p>
-    <div id="diag-output" style="font-size:12px;color:var(--mut);line-height:2;font-family:monospace">Clique em Verificar para carregar...</div>
+    <div class="ctitle" data-i18n="cfg.storage">🗄️ Storage — Diagnóstico</div>
+    <p class="hint" style="margin-bottom:10px" data-i18n="cfg.storage.hint">IndexedDB ativo desde a Fase 2. Dados operacionais migrados automaticamente do localStorage.</p>
+    <div id="diag-output" style="font-size:12px;color:var(--mut);line-height:2;font-family:monospace" data-i18n="diag.click">Clique em Verificar para carregar...</div>
     <div class="brow">
-      <button class="btn btn-ghost btn-sm" onclick="verDiagnostico()">🔍 Verificar storage</button>
-      <button class="btn btn-ghost btn-sm" onclick="exportarBackup()">💾 Backup JSON</button>
+      <button class="btn btn-ghost btn-sm" onclick="verDiagnostico()" data-i18n="btn.verificar">🔍 Verificar storage</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportarBackup()" data-i18n="btn.backup">💾 Backup JSON</button>
     </div>
   </div>
+
+  <!-- PREFERÊNCIAS DO APLICATIVO — Fase 13 Etapa Final -->
+  <div class="card" style="border-color:rgba(59,130,246,.25);background:linear-gradient(135deg,var(--surf) 0%,rgba(59,130,246,.04) 100%)">
+    <div class="ctitle" data-i18n="cfg.pref">🌐 Preferências do Aplicativo</div>
+    <div class="pref-grid">
+      <div class="pref-item">
+        <label data-i18n="cfg.pref.lang">Idioma</label>
+        <select id="pref-lang" class="pref-select" onchange="i18n.set(this.value)">
+          <option value="pt-BR">🇧🇷 Português BR</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+        </select>
+      </div>
+      <div class="pref-item">
+        <label data-i18n="cfg.pref.tema">Tema</label>
+        <select id="pref-tema" class="pref-select" onchange="themeManager.set(this.value)">
+          <option value="dark">🌙 Escuro</option>
+          <option value="light">☀️ Claro</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <span class="pref-badge">✅ Fase 13 — Completa</span>
+    </div>
+  </div>
+
     <p class="hint" style="margin-bottom:10px">No Android Chrome: Menu → "Adicionar à tela inicial". No iOS Safari: Compartilhar → "Adicionar à Tela de Início".</p>
     <div id="pwa-install-wrap">
-      <button class="btn btn-acc btn-sm" id="btn-pwa-install" style="display:none" onclick="installPWA()">📲 Instalar App</button>
+      <button class="btn btn-acc btn-sm" id="btn-pwa-install" style="display:none" onclick="installPWA()" data-i18n="btn.instalar">📲 Instalar App</button>
     </div>
   </div>
 </section>
@@ -797,6 +823,8 @@
 
 
 <!-- ════ MÓDULOS JS (ordem obrigatória) ════ -->
+<script src="theme.js"></script>
+<script src="i18n.js"></script>
 <script src="storage.js"></script>
 <script src="utils.js"></script>
 <script src="connectivity.js"></script>

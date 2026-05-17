@@ -681,3 +681,218 @@ tr:hover td{background:var(--surf2)}
   cursor:pointer;letter-spacing:.5px;
 }
 .dh-tv-exit:hover{color:var(--red);border-color:var(--red)}
+
+/* ═══════════════════════════════════════════════
+   LIGHT MODE — Fase 13 Etapa Final
+   Ativado via [data-theme="light"] no <html>
+═══════════════════════════════════════════════ */
+
+[data-theme="light"] {
+  --bg:    #f1f4fb;
+  --surf:  #ffffff;
+  --surf2: #f7f9fe;
+  --surf3: #eef1f9;
+  --bord:  #dde3f0;
+  --bord2: #c9d2e8;
+  --acc:   #d97706;
+  --acc2:  #f59e0b;
+  --acc-dim: rgba(217,119,6,.10);
+  --grn:   #059669;
+  --grn-dim: rgba(5,150,105,.10);
+  --red:   #dc2626;
+  --red-dim: rgba(220,38,38,.10);
+  --blue:  #2563eb;
+  --blue-dim: rgba(37,99,235,.10);
+  --txt:   #1e293b;
+  --txt2:  #475569;
+  --mut:   #94a3b8;
+  --shadow: 0 4px 24px rgba(0,0,0,.10);
+  --glow-acc: 0 0 20px rgba(217,119,6,.12);
+}
+
+/* Ajustes finos light mode */
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--txt);
+}
+[data-theme="light"] .topbar {
+  background: rgba(255,255,255,.92);
+  border-bottom-color: var(--bord);
+  box-shadow: 0 1px 8px rgba(0,0,0,.08);
+}
+[data-theme="light"] .nav {
+  background: var(--surf);
+  border-bottom-color: var(--bord);
+}
+[data-theme="light"] .ntab {
+  color: var(--mut);
+}
+[data-theme="light"] .ntab:hover { color: var(--txt); }
+[data-theme="light"] .ntab.on {
+  border-bottom-color: var(--acc);
+  color: var(--acc);
+}
+[data-theme="light"] .card {
+  background: var(--surf);
+  border-color: var(--bord);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+[data-theme="light"] .live-strip {
+  background: var(--surf);
+  border-bottom-color: var(--bord);
+}
+[data-theme="light"] .live-chip {
+  background: var(--surf2);
+  border-color: var(--bord2);
+  color: var(--txt2);
+}
+[data-theme="light"] .fg input,
+[data-theme="light"] .fg select,
+[data-theme="light"] .fg textarea {
+  background: var(--surf2);
+  border-color: var(--bord);
+  color: var(--txt);
+}
+[data-theme="light"] .fg input:focus,
+[data-theme="light"] .fg select:focus,
+[data-theme="light"] .fg textarea:focus {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px rgba(217,119,6,.10);
+}
+[data-theme="light"] .btn-ghost {
+  background: var(--surf2);
+  border-color: var(--bord2);
+  color: var(--txt2);
+}
+[data-theme="light"] .btn-ghost:hover {
+  border-color: var(--acc);
+  color: var(--acc);
+}
+[data-theme="light"] .modal {
+  background: var(--surf);
+  border: 1px solid var(--bord);
+  box-shadow: 0 8px 40px rgba(0,0,0,.15);
+}
+[data-theme="light"] .overlay {
+  background: rgba(0,0,0,.35);
+}
+[data-theme="light"] .wabubble {
+  background: var(--surf2);
+  border-color: var(--bord);
+  color: var(--txt);
+}
+[data-theme="light"] #toast {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+[data-theme="light"] .eqcard {
+  background: var(--surf2);
+  border-color: var(--bord);
+}
+[data-theme="light"] .hitem {
+  background: var(--surf2);
+  border-color: var(--bord);
+}
+[data-theme="light"] .timer-bar {
+  background: var(--surf2);
+  border-color: var(--bord2);
+}
+[data-theme="light"] .ia-card {
+  background: var(--surf);
+  border-color: var(--bord);
+}
+[data-theme="light"] code {
+  background: var(--surf3);
+  color: var(--grn);
+}
+[data-theme="light"] .dh-kpi {
+  background: var(--surf);
+  border-color: var(--bord);
+}
+[data-theme="light"] .dh-mapa-doca {
+  background: var(--surf2);
+  border-color: var(--bord2);
+}
+[data-theme="light"] .dh-feed-item {
+  background: var(--surf2);
+  border-color: var(--bord);
+}
+[data-theme="light"] .hint {
+  color: var(--mut);
+}
+
+/* Transição suave ao trocar tema */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color .3s ease, border-color .3s ease, color .2s ease, box-shadow .3s ease !important;
+}
+
+/* ═══════════════════════════════════════════════
+   SELETOR DE PREFERÊNCIAS — Fase 13 Etapa Final
+═══════════════════════════════════════════════ */
+
+.pref-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+@media (max-width: 400px) {
+  .pref-grid { grid-template-columns: 1fr; }
+}
+
+.pref-item label {
+  display: block;
+  font-size: 11px;
+  color: var(--mut);
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.pref-select {
+  width: 100%;
+  background: var(--surf2);
+  border: 1.5px solid var(--bord);
+  border-radius: 8px;
+  color: var(--txt);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 12px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5568' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.pref-select:focus {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px rgba(245,158,11,.12);
+}
+
+[data-theme="light"] .pref-select {
+  background-color: var(--surf2);
+  border-color: var(--bord);
+}
+
+.pref-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--grn-dim);
+  color: var(--grn);
+  border: 1px solid rgba(16,185,129,.25);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  margin-top: 8px;
+  letter-spacing: .5px;
+}

@@ -9,7 +9,7 @@
    INCREMENTAR ESTE NÚMERO a cada deploy no GitHub.
    O SW detecta a mudança e avisa o operador automaticamente.
 ─────────────────────────────────────────────────────────── */
-const CACHE_VERSION = 6;
+const CACHE_VERSION = 7;
 const CACHE_NAME    = `dockcheck-v${CACHE_VERSION}`;
 
 /* ── Assets do app shell (todos devem existir no repositório) ─ */
@@ -17,6 +17,8 @@ const CACHE_STATIC = [
   './',
   './index.html',
   './style.css',
+  './theme.js',
+  './i18n.js',
   './storage.js',
   './utils.js',
   './connectivity.js',
