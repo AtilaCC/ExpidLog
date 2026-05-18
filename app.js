@@ -364,6 +364,9 @@ async function init() {
   // ── Fase 13 Etapa 7: inicia Geolocalização ──
   if (typeof geoInit === 'function') geoInit();
 
+  // ── Fase 14: Engine de Automação ──
+  if (typeof automacaoInit === 'function') automacaoInit();
+
   // ── Fase 13: fecha splash screen ──
   setTimeout(() => {
     if (typeof window.dcSplashClose === 'function') {
