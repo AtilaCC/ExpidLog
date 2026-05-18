@@ -390,29 +390,55 @@ $$;
 // ─────────────────────────────────────────────────────
 const SCHEMA_FASE13 = `
 CREATE TABLE IF NOT EXISTS push_subscriptions (
-  id            UUID        PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id       UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  empresa_id    UUID        NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
-  endpoint      TEXT        NOT NULL,
-  p256dh        TEXT        NOT NULL,
-  auth          TEXT        NOT NULL,
-  user_agent    TEXT,
-  ativo         BOOLEAN     NOT NULL DEFAULT true,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  empresa_id UUID NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
+  endpoint   TEXT NOT NULL,
+  p256dh     TEXT NOT NULL,
+  auth       TEXT NOT NULL,
+  user_agent TEXT,
+  ativo      BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (user_id, endpoint)
 );
 CREATE INDEX IF NOT EXISTS idx_push_user    ON push_subscriptions(user_id);
 CREATE INDEX IF NOT EXISTS idx_push_empresa ON push_subscriptions(empresa_id);
-CREATE INDEX IF NOT EXISTS idx_push_ativo   ON push_subscriptions(ativo);
-DROP TRIGGER IF EXISTS trg_updated_at_push_subscriptions ON push_subscriptions;
-CREATE TRIGGER trg_updated_at_push_subscriptions
-  BEFORE UPDATE ON push_subscriptions
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+`;
+
+const SCHEMA_FASE14 = `
+CREATE TABLE IF NOT EXISTS automacao_regras (
+  id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  empresa_id UUID NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
+  user_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  nome       TEXT NOT NULL,
+  gatilho    TEXT NOT NULL,
+  condicao   JSONB NOT NULL DEFAULT '{}',
+  acao       TEXT NOT NULL,
+  params     JSONB NOT NULL DEFAULT '{}',
+  ativo      BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_auto_regras_empresa ON automacao_regras(empresa_id);
+
+CREATE TABLE IF NOT EXISTS automacao_log (
+  id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  empresa_id UUID NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
+  user_id    UUID REFERENCES users(id) ON DELETE SET NULL,
+  regra_id   UUID REFERENCES automacao_regras(id) ON DELETE SET NULL,
+  regra_nome TEXT,
+  acao       TEXT,
+  params     JSONB,
+  resultado  TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_auto_log_empresa ON automacao_log(empresa_id);
+CREATE INDEX IF NOT EXISTS idx_auto_log_created ON automacao_log(created_at DESC);
 `;
 
 async function migrate() {
-  logger.info('🔄 Starting migration v3 (Fase 13)...');
+  logger.info('🔄 Starting migration v4 (Fase 14)...');
   const client = await pool.connect();
   try {
     if (FRESH) {
@@ -425,7 +451,9 @@ async function migrate() {
     await client.query(SCHEMA_FASE12);
     logger.info('  → Applying Fase 13 schema (Push Notifications)...');
     await client.query(SCHEMA_FASE13);
-    logger.info('✅ Migration v3 completed successfully');
+    logger.info('  → Applying Fase 14 schema (Automação)...');
+    await client.query(SCHEMA_FASE14);
+    logger.info('✅ Migration v4 completed successfully');
   } catch (err) {
     logger.error('❌ Migration failed:', err);
     throw err;
