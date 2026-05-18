@@ -25,8 +25,10 @@ const cdRoutes         = require('./routes/cd.routes');
 const empresaRoutes    = require('./routes/empresa.routes');
 const superadminRoutes = require('./routes/superadmin.routes');
 const pushRoutes       = require('./routes/push.routes');
-// ─── Fase 14: Automação ───────────────────────────────
+// ─── Fase 14: Automação Operacional ───────────────────
 const automacaoRoutes  = require('./routes/automacao.routes');
+// ─── Fase 15: IA Autônoma Enterprise ──────────────────
+const iaRoutes         = require('./routes/ia.routes');
 
 const app = express();
 
@@ -93,8 +95,8 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     service: 'dockcheck-pro-backend',
-    version: '4.0.0',
-    fase: 14,
+    version: '5.0.0',
+    fase: 15,
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
@@ -116,7 +118,12 @@ app.use('/api/cds',        cdRoutes);
 app.use('/api/empresas',   empresaRoutes);
 app.use('/api/superadmin', superadminRoutes);
 app.use('/api/push',       pushRoutes);
+
+// ─── API Routes (Fase 14 — Automação) ─────────────────
 app.use('/api/automacao',  automacaoRoutes);
+
+// ─── API Routes (Fase 15 — IA Autônoma) ───────────────
+app.use('/api/ia',         iaRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────
 app.use((req, res) => {
