@@ -1,0 +1,74 @@
+<!--
+  ══════════════════════════════════════════════════════
+  RELATÓRIO ENTERPRISE — Novos elementos para index.html
+  ══════════════════════════════════════════════════════
+
+  Adicionar dentro da aba #tab-relatorio, nos locais indicados.
+  Os IDs existentes (rel-tbody-docas, rel-podio-*, etc.) NÃO mudam.
+-->
+
+<!-- 1. PERFORMANCE DE DOCAS ENTERPRISE
+     Adicionar APÓS o bloco da tabela de docas existente -->
+<div style="font-weight:700;font-size:12px;letter-spacing:.8px;color:var(--mut);
+            text-transform:uppercase;margin:18px 0 10px;display:flex;align-items:center;gap:6px">
+  <span style="width:6px;height:6px;border-radius:50%;background:var(--acc);display:inline-block"></span>
+  PERFORMANCE ENTERPRISE DAS DOCAS
+</div>
+<div id="rel-docas-enterprise"></div>
+
+<!-- 2. SCORE OPERACIONAL GERAL
+     Adicionar onde fizer sentido (ex: acima da tabela de docas) -->
+<div style="font-weight:700;font-size:12px;letter-spacing:.8px;color:var(--mut);
+            text-transform:uppercase;margin:18px 0 10px;display:flex;align-items:center;gap:6px">
+  <span style="width:6px;height:6px;border-radius:50%;background:var(--grn);display:inline-block"></span>
+  SCORE OPERACIONAL
+</div>
+<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:16px;margin-bottom:16px">
+  <canvas id="rel-score-gauge" height="100" style="max-width:220px;display:block;margin:0 auto"></canvas>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;text-align:center">
+    <div>
+      <div id="rel-score-val" style="font-size:22px;font-weight:900;color:var(--acc);font-family:'Barlow Condensed',sans-serif">—</div>
+      <div style="font-size:10px;color:var(--mut)">Score</div>
+    </div>
+    <div>
+      <div id="rel-score-sla" style="font-size:22px;font-weight:900;color:var(--grn);font-family:'Barlow Condensed',sans-serif">—</div>
+      <div style="font-size:10px;color:var(--mut)">SLA</div>
+    </div>
+    <div>
+      <div id="rel-score-efic" style="font-size:22px;font-weight:900;color:#3b82f6;font-family:'Barlow Condensed',sans-serif">—</div>
+      <div style="font-size:10px;color:var(--mut)">Eficiência</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. ANALYTICS DE ROTAS RJ
+     Adicionar após a seção de transportadoras -->
+<div style="font-weight:700;font-size:12px;letter-spacing:.8px;color:var(--mut);
+            text-transform:uppercase;margin:18px 0 10px;display:flex;align-items:center;gap:6px">
+  <span style="width:6px;height:6px;border-radius:50%;background:#3b82f6;display:inline-block"></span>
+  ANALYTICS DE ROTAS · REGIÕES DO RJ
+</div>
+<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:8px">
+  <canvas id="rel-heatmap-regioes" height="100" style="width:100%;display:block;margin-bottom:10px"></canvas>
+</div>
+<div id="rel-rotas-rj"></div>
+
+<!-- 4. IA EXECUTIVA
+     Adicionar no final da aba, antes dos botões de export -->
+<div style="font-weight:700;font-size:12px;letter-spacing:.8px;color:var(--mut);
+            text-transform:uppercase;margin:18px 0 10px;display:flex;align-items:center;gap:6px">
+  <span style="width:6px;height:6px;border-radius:50%;background:var(--acc);display:inline-block;animation:pulse 2s infinite"></span>
+  IA EXECUTIVA · ANÁLISE ESTRATÉGICA
+</div>
+<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:14px;margin-bottom:14px">
+  <div id="rel-ia-executiva">
+    <div style="text-align:center;color:var(--mut);font-size:12px;padding:16px">
+      Clique em "Gerar Análise IA" para insights estratégicos automáticos
+    </div>
+  </div>
+  <button onclick="relGerarIAExecutiva()"
+    style="width:100%;padding:10px;background:var(--acc);border:none;border-radius:8px;
+           color:#000;font-weight:700;font-size:13px;cursor:pointer;margin-top:10px">
+    🤖 Gerar Análise IA Executiva
+  </button>
+</div>
