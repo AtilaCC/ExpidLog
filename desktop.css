@@ -1,0 +1,886 @@
+/**
+ * desktop.css — DockCheck PRO · Fase 15
+ * Torre de Controle Logística Enterprise
+ *
+ * Breakpoints:
+ *   768px  — tablet: grid híbrido, analytics expandido
+ *   1024px — notebook: sidebar + conteúdo principal
+ *   1440px — desktop: painel completo widescreen
+ *   1920px — ultrawide: múltiplos painéis simultâneos
+ *
+ * Carregado APÓS style.css.
+ * NÃO modifica nenhuma classe existente — apenas adiciona
+ * comportamento responsivo via media queries e novas classes.
+ */
+
+/* ════════════════════════════════════════════════════════════
+   TOKENS DESKTOP
+════════════════════════════════════════════════════════════ */
+
+:root {
+  --sidebar-w:        220px;
+  --sidebar-w-xl:     240px;
+  --sidebar-w-collapsed: 56px;
+  --topbar-h:         54px;
+  --content-max:      1600px;
+  --panel-gap:        12px;
+  --glow-strong:      0 0 30px rgba(245,158,11,.25);
+  --glass:            rgba(19,23,31,.85);
+  --glass-border:     rgba(255,255,255,.05);
+}
+
+/* ════════════════════════════════════════════════════════════
+   TABLET — 768px+
+   Grid híbrido, KPIs em linha, analytics expandido
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+
+  /* Tab container sem max-width restrito */
+  .tab { max-width: 100%; padding: 16px 20px 60px; }
+
+  /* KPI grid 4 colunas no tablet */
+  .dh-kpi-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px;
+  }
+
+  /* Mini strip 4+ colunas */
+  .dh-mini-strip { grid-template-columns: repeat(4, 1fr); }
+
+  /* Dashboard: mapa + feed lado a lado */
+  .dh-lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: var(--panel-gap);
+    align-items: start;
+  }
+
+  /* Analytics: charts lado a lado */
+  .an-charts-duo {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Analytics KPI grid 4 colunas */
+  .an-kpi-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Rankings lado a lado */
+  .an-rankings-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Duo wrap lado a lado */
+  .an-duo-wrap {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* BI: grid 2 colunas */
+  .bi-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Docas grid tablet */
+  .dh-mapa-docas {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px;
+  }
+
+  /* Form conferência: 2 colunas */
+  .conf-grid-tablet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   NOTEBOOK — 1024px+
+   Sidebar fixa + layout principal com conteúdo expandido
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  /* ── Ocultar bottom nav mobile ── */
+  .mobile-nav-bottom { display: none !important; }
+
+  /* ── Layout raiz com sidebar ── */
+  body { display: flex; flex-direction: column; }
+
+  #app-root {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── SIDEBAR ── */
+  .dc-sidebar {
+    display: flex !important;
+    flex-direction: column;
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--surf);
+    border-right: 1px solid var(--bord);
+    height: calc(100vh - var(--topbar-h));
+    position: sticky;
+    top: var(--topbar-h);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bord) transparent;
+    z-index: 50;
+    transition: width .25s ease;
+  }
+
+  .dc-sidebar::-webkit-scrollbar { width: 4px; }
+  .dc-sidebar::-webkit-scrollbar-track { background: transparent; }
+  .dc-sidebar::-webkit-scrollbar-thumb { background: var(--bord); border-radius: 2px; }
+
+  /* ── Sidebar Logo ── */
+  .dc-sidebar-logo {
+    padding: 16px 14px 12px;
+    border-bottom: 1px solid var(--bord);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dc-sidebar-logo-txt {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    color: var(--txt);
+  }
+
+  .dc-sidebar-logo-txt em {
+    color: var(--acc);
+    font-style: normal;
+  }
+
+  /* ── Sidebar Nav Items ── */
+  .dc-sidebar-nav {
+    padding: 10px 8px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .dc-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s;
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--txt2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .dc-sidebar-item:hover {
+    background: var(--surf2);
+    color: var(--txt);
+    border-color: var(--bord);
+  }
+
+  .dc-sidebar-item.on {
+    background: var(--acc-dim);
+    border-color: rgba(245,158,11,.25);
+    color: var(--acc);
+  }
+
+  .dc-sidebar-item.on .dc-sidebar-icon {
+    filter: drop-shadow(0 0 6px rgba(245,158,11,.6));
+  }
+
+  .dc-sidebar-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+  }
+
+  .dc-sidebar-label { flex: 1; }
+
+  .dc-sidebar-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--red);
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  /* ── Sidebar Grupo ── */
+  .dc-sidebar-group {
+    padding: 8px 10px 4px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--mut);
+    text-transform: uppercase;
+  }
+
+  /* ── Sidebar Footer ── */
+  .dc-sidebar-footer {
+    padding: 10px 8px;
+    border-top: 1px solid var(--bord);
+  }
+
+  .dc-sidebar-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: var(--mut);
+    border-radius: 8px;
+    background: var(--surf2);
+    border: 1px solid var(--bord);
+  }
+
+  .dc-sidebar-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--grn);
+    box-shadow: 0 0 6px rgba(16,185,129,.6);
+    flex-shrink: 0;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  /* ── Conteúdo principal ── */
+  #app-content {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Nav horizontal — ocultar no desktop (sidebar assume) */
+  .nav { display: none; }
+
+  /* Tab container expandido */
+  .tab {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 16px 24px 60px;
+  }
+
+  /* ── Dashboard: layout 3 colunas ── */
+  .dh-command-center {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--panel-gap);
+    margin-bottom: var(--panel-gap);
+  }
+
+  /* KPI grid 4 colunas desktop */
+  .dh-kpi-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: var(--panel-gap);
+    margin-bottom: var(--panel-gap);
+  }
+
+  /* Dashboard: mapa + feed + alertas */
+  .dh-lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--panel-gap);
+    align-items: start;
+  }
+
+  /* Mapa docas grid */
+  .dh-mapa-docas {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px;
+  }
+
+  /* Analytics: 3 colunas */
+  .an-charts-trio {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--panel-gap);
+  }
+
+  /* Analytics KPIs 6 colunas */
+  .an-kpi-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+
+  /* Topbar ajustada para desktop */
+  .topbar {
+    padding: 0 20px;
+    height: var(--topbar-h);
+  }
+
+  /* Live strip mais compacta */
+  .live-strip { padding: 6px 20px; }
+
+  /* Ocultar nav horizontal */
+  .nav { display: none !important; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   DESKTOP — 1440px+
+   Painel completo, múltiplas colunas simultâneas
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1440px) {
+
+  .dc-sidebar { width: var(--sidebar-w-xl); }
+
+  /* KPI grid 4 colunas maiores */
+  .dh-kpi-grid { gap: 14px; }
+
+  .dh-kpi-num {
+    font-size: 52px !important;
+  }
+
+  /* Dashboard: 3 painéis simultâneos */
+  .dh-triple-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--panel-gap);
+  }
+
+  /* Mapa docas maior */
+  .dh-mapa-docas {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+
+  .dh-mapa-doca {
+    padding: 14px 10px !important;
+  }
+
+  .dh-mapa-num {
+    font-size: 26px !important;
+  }
+
+  /* Analytics: duo 2+1 layout */
+  .an-charts-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--panel-gap);
+  }
+
+  /* BI grid 3 colunas */
+  .bi-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--panel-gap);
+  }
+
+  /* Feed operacional sempre visível */
+  .dh-feed {
+    max-height: 600px !important;
+  }
+
+  /* Alertas em coluna lateral */
+  .dh-alertas-col {
+    position: sticky;
+    top: calc(var(--topbar-h) + 16px);
+  }
+
+  /* KPI cards com números maiores */
+  .an-kpi-card .an-kpi-val {
+    font-size: 32px !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ULTRAWIDE — 1920px+
+   Múltiplos painéis, densidade máxima
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1920px) {
+
+  .dc-sidebar { width: 260px; }
+
+  .tab { padding: 20px 32px 60px; }
+
+  /* 5 painéis KPI */
+  .dh-kpi-grid {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 16px;
+  }
+
+  /* Mapa de docas 8 colunas */
+  .dh-mapa-docas {
+    grid-template-columns: repeat(8, 1fr) !important;
+  }
+
+  /* Dashboard: 4 colunas */
+  .dh-quad-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: var(--panel-gap);
+  }
+
+  /* Analytics: 3 colunas completas */
+  .an-charts-duo {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+
+  /* KPI analytics 8 colunas */
+  .an-kpi-grid {
+    grid-template-columns: repeat(8, 1fr) !important;
+  }
+
+  /* Feed expandido */
+  .dh-feed {
+    max-height: 800px !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   MODO TV — classe aplicada via JS (tv-mode)
+   Ativado pelo botão TV no dashboard
+════════════════════════════════════════════════════════════ */
+
+body.tv-mode {
+  font-size: 18px;
+  cursor: none;
+}
+
+body.tv-mode .topbar {
+  padding: 0 32px;
+  height: 60px;
+}
+
+body.tv-mode .logo {
+  font-size: 28px;
+}
+
+body.tv-mode .dc-sidebar { display: none !important; }
+
+body.tv-mode #app-content {
+  width: 100%;
+}
+
+body.tv-mode .tab {
+  max-width: 100%;
+  padding: 20px 32px;
+}
+
+/* KPIs gigantes no TV */
+body.tv-mode .dh-kpi-num {
+  font-size: 72px !important;
+}
+
+body.tv-mode .dh-kpi {
+  padding: 20px !important;
+}
+
+body.tv-mode .dh-kpi-grid {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 16px;
+}
+
+body.tv-mode .dh-kpi-label {
+  font-size: 13px !important;
+  letter-spacing: 1px;
+}
+
+/* Mapa docas TV */
+body.tv-mode .dh-mapa-docas {
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 12px;
+}
+
+body.tv-mode .dh-mapa-doca {
+  padding: 20px 12px !important;
+  border-radius: 14px !important;
+}
+
+body.tv-mode .dh-mapa-num {
+  font-size: 36px !important;
+}
+
+/* Alertas em destaque TV */
+body.tv-mode .dh-alerta {
+  padding: 16px 18px;
+  font-size: 16px;
+}
+
+body.tv-mode .dh-alerta-time {
+  font-size: 32px !important;
+}
+
+/* Feed TV */
+body.tv-mode .dh-feed-item {
+  padding: 14px 16px;
+  font-size: 14px;
+}
+
+/* Ocultar elementos não essenciais no TV */
+body.tv-mode .nav,
+body.tv-mode .live-strip,
+body.tv-mode #tab-conferencia,
+body.tv-mode #tab-ocr,
+body.tv-mode #tab-equipes,
+body.tv-mode #tab-historico,
+body.tv-mode #tab-relatorio,
+body.tv-mode #tab-config {
+  display: none !important;
+}
+
+/* Rotação automática de painéis no TV */
+body.tv-mode .tv-panel {
+  animation: tv-rotate 30s linear infinite;
+}
+
+/* Ticker operacional no TV */
+.tv-ticker {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surf);
+  border-top: 1px solid var(--bord);
+  padding: 8px 20px;
+  overflow: hidden;
+  z-index: 200;
+}
+
+body.tv-mode .tv-ticker { display: block; }
+
+.tv-ticker-inner {
+  display: flex;
+  gap: 40px;
+  animation: ticker-scroll 40s linear infinite;
+  white-space: nowrap;
+}
+
+.tv-ticker-item {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: var(--txt2);
+  flex-shrink: 0;
+}
+
+.tv-ticker-item.alert { color: var(--red); }
+.tv-ticker-item.ok    { color: var(--grn); }
+.tv-ticker-item.warn  { color: var(--acc); }
+
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SIDEBAR — oculta por padrão (mobile)
+   JS adiciona .dc-sidebar--visible no desktop
+════════════════════════════════════════════════════════════ */
+
+.dc-sidebar { display: none; }
+
+/* ════════════════════════════════════════════════════════════
+   APP ROOT — wrapper flex para sidebar + conteúdo
+════════════════════════════════════════════════════════════ */
+
+#app-root {
+  display: block;
+  min-height: 0;
+}
+
+#app-content { width: 100%; }
+
+/* ════════════════════════════════════════════════════════════
+   WIDESCREEN PANELS — classes utilitárias
+════════════════════════════════════════════════════════════ */
+
+/* Painel flutuante lateral */
+.ws-panel {
+  background: var(--surf);
+  border: 1px solid var(--bord);
+  border-radius: var(--r2);
+  overflow: hidden;
+}
+
+.ws-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--bord);
+  background: var(--surf2);
+}
+
+.ws-panel-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mut);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ws-panel-body { padding: 12px; }
+
+/* ── Grid layouts utilitários ── */
+.ws-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--panel-gap); }
+.ws-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--panel-gap); }
+.ws-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--panel-gap); }
+.ws-grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: var(--panel-gap); }
+.ws-grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: var(--panel-gap); }
+.ws-grid-3-1 { display: grid; grid-template-columns: 3fr 1fr; gap: var(--panel-gap); }
+
+/* Mobile: empilha tudo */
+@media (max-width: 767px) {
+  .ws-grid-2, .ws-grid-3, .ws-grid-4,
+  .ws-grid-2-1, .ws-grid-1-2, .ws-grid-3-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   COMMAND CENTER HEADER — Desktop
+   Barra de status superior no widescreen
+════════════════════════════════════════════════════════════ */
+
+.dc-command-bar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: var(--surf);
+  border-bottom: 1px solid var(--bord);
+  font-size: 11px;
+  color: var(--txt2);
+}
+
+@media (min-width: 1024px) {
+  .dc-command-bar { display: flex; }
+}
+
+.dc-command-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+
+.dc-command-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dc-command-sep {
+  width: 1px;
+  height: 14px;
+  background: var(--bord);
+  flex-shrink: 0;
+}
+
+.dc-command-clock {
+  margin-left: auto;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--acc);
+  letter-spacing: 1px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   TOPBAR DESKTOP — ajustes para widescreen
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+  .topbar-right { gap: 14px; }
+
+  /* Ocultar live strip no desktop (vai para sidebar) */
+  .live-strip { display: none; }
+
+  /* Topbar mais densa */
+  .topbar { padding: 0 20px; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ANALYTICS DESKTOP — painéis enterprise
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  /* Seção header */
+  .an-cmd-header { padding: 14px 20px 10px; }
+
+  /* Chart cards maiores */
+  .an-chart-card { min-height: 220px; }
+
+  /* Heatmap mais alto */
+  .an-chart-card--heatmap canvas { height: 240px !important; }
+
+  /* Rankings em grid 3 colunas */
+  .an-rankings-grid { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* Duo wrap 3 colunas */
+  .an-duo-wrap { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   DASHBOARD DESKTOP — central operacional
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  /* Header do dashboard */
+  .dh-header { padding: 14px 20px 10px; }
+
+  /* KPI cards maiores */
+  .dh-kpi { padding: 18px 16px; }
+
+  /* Alertas em scroll */
+  #dash-alertas-wrap {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  /* Feed em scroll */
+  .dh-feed {
+    max-height: 500px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bord) transparent;
+  }
+
+  /* Mapa docas com hover mais rico */
+  .dh-mapa-doca:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.3) !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SPARKLINE — mini gráfico inline nos KPIs
+════════════════════════════════════════════════════════════ */
+
+.sparkline-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+  margin-top: 6px;
+}
+
+.sparkline-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  min-height: 3px;
+  transition: height .5s ease;
+  opacity: .7;
+}
+
+.sparkline-bar:hover { opacity: 1; }
+
+/* ════════════════════════════════════════════════════════════
+   SCROLL CUSTOM — desktop
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bord2) transparent;
+  }
+
+  *::-webkit-scrollbar { width: 5px; height: 5px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { background: var(--bord2); border-radius: 3px; }
+  *::-webkit-scrollbar-thumb:hover { background: var(--mut); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   FOCUS E ACESSIBILIDADE DESKTOP
+════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+  .dc-sidebar-item:focus-visible {
+    outline: 2px solid var(--acc);
+    outline-offset: 2px;
+  }
+
+  .ntab:focus-visible {
+    outline: 2px solid var(--acc);
+    outline-offset: -2px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   TRANSIÇÕES DE PAINEL
+════════════════════════════════════════════════════════════ */
+
+.ws-panel,
+.dh-kpi,
+.an-chart-card,
+.an-kpi-card {
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+@media (min-width: 1024px) {
+  .ws-panel:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,.35);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   LIGHT MODE — ajustes desktop
+════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] .dc-sidebar {
+  background: rgba(255,255,255,.95);
+  border-right-color: var(--bord);
+}
+
+[data-theme="light"] .dc-sidebar-item:hover {
+  background: var(--surf2);
+}
+
+[data-theme="light"] .dc-sidebar-item.on {
+  background: rgba(217,119,6,.08);
+}
+
+[data-theme="light"] .dc-command-bar {
+  background: rgba(255,255,255,.92);
+  border-bottom-color: var(--bord);
+}
+
+[data-theme="light"] .ws-panel {
+  background: var(--surf);
+  border-color: var(--bord);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+[data-theme="light"] .tv-ticker {
+  background: var(--surf);
+  border-top-color: var(--bord);
+}
